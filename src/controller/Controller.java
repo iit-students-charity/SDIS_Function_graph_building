@@ -1,36 +1,34 @@
 package controller;
 
-import javafx.collections.ObservableList;
 import model.Function;
-import model.Point;
 
 public class Controller {
     private Function function;
+    private Thread calcThread;
+    private Thread drawThread;
 
 
     public Controller(Function function) {
         this.function = function;
+        calcThread = new Thread();
+        drawThread = new Thread();
     }
 
-    public void startGraphBuilding(int numberOfLists) {
-        double downLimit = function.getXDownLimit();
-        double n = function.getXUpLimit();
-        double mega = 1000000;
-
-        function.getPoints().clear();
-
-        for (int i = (int) downLimit; i <= n; i++) {
-            double summarySortingTime = 0;
-
-            for (int j = 0; j < numberOfLists; j++) {
-                ObservableList<Double> doubles = ListGenerator.generate(i);
-
-                double startTime = System.nanoTime();
-                ListSorter.sort(doubles);
-                summarySortingTime += System.nanoTime() - startTime;
-            }
-            double averageSortingTime = (summarySortingTime / numberOfLists) / mega;
-            function.getPoints().add(new Point(i, averageSortingTime));
+    public void startGraphicBuilding(int numberOfLists) {
+        if (!calcThread.isAlive()) {
+            calcThread = new Thread(new SortingTask(function, numberOfLists));
+            calcThread.start();
         }
+    }
+
+    public void pauseGraphicBuilding() {
+        if (calcThread.isAlive()) {
+            calcThread.interrupt();
+            function.getPoints().clear();
+        }
+    }
+
+    public void addPointToGraphic() {
+
     }
 }

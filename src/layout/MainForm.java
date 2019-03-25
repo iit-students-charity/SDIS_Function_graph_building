@@ -39,8 +39,6 @@ public class MainForm {
         return menuBar;
     }
 
-
-
     private ToolBar createToolBar() {
         ToolBar toolBar = new ToolBar();
 

@@ -14,12 +14,13 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         Function function = new Function();
         Controller controller = new Controller(function);
+        MainForm mainForm = new MainForm(function, controller);
 
         primaryStage.setResizable(false);
-        primaryStage.setTitle("Function graph building");
+        primaryStage.setTitle(LayoutConstant.MAIN_FORM_TITLE);
         primaryStage.setHeight(LayoutConstant.MAIN_FORM_HEIGHT);
         primaryStage.setWidth(LayoutConstant.MAIN_FORM_WIDTH);
-        primaryStage.setScene(new Scene(new MainForm(function, controller).getVBox()));
+        primaryStage.setScene(new Scene(mainForm.getVBox()));
         primaryStage.show();
     }
 

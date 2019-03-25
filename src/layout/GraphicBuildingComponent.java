@@ -13,6 +13,19 @@ import model.Point;
 
 
 public class GraphicBuildingComponent {
+    private class GraphicForm {
+        private GridPane gridPane;
+
+
+        public GraphicForm() {
+            gridPane = new GridPane();
+        }
+
+        public GridPane getGridPane() {
+            return gridPane;
+        }
+    }
+
     private GridPane gridPane;
 
     private TextField nTextField;
@@ -22,6 +35,7 @@ public class GraphicBuildingComponent {
     private TableView<Point> functionTable;
     private GraphicForm graphicForm;
 
+    private Function function;
     private Controller controller;
 
 
@@ -31,7 +45,7 @@ public class GraphicBuildingComponent {
         initStartButton();
         initPauseButton();
         initFunctionTable(function);
-        graphicForm = new GraphicForm(function);
+        graphicForm = new GraphicForm();
 
         gridPane = new GridPane();
         gridPane.getColumnConstraints().add(0, new ColumnConstraints(LayoutConstant.MAIN_FORM_WIDTH / 4));
@@ -44,6 +58,7 @@ public class GraphicBuildingComponent {
         ), 0, 0);
         gridPane.add(graphicForm.getGridPane(), 1,0);
 
+        this.function = function;
         this.controller = controller;
     }
 
@@ -59,7 +74,7 @@ public class GraphicBuildingComponent {
     }
 
     private void initStartButton() {
-        startBuildButton = new Button("Start");
+        startBuildButton = new Button(LayoutConstant.START_BUTTON_TEXT);
         startBuildButton.setOnAction(e -> {
             String nString = nTextField.getText();
             String kString = kTextField.getText();
@@ -74,16 +89,16 @@ public class GraphicBuildingComponent {
                 return;
             }
 
-            graphicForm.getFunction().setXUpLimit(n);
+            function.setXUpLimit(n);
 
-            controller.startGraphBuilding(k);
+            controller.startGraphicBuilding(k);
         });
     }
 
     private void initPauseButton() {
-        pauseBuildButton = new Button("Pause");
+        pauseBuildButton = new Button(LayoutConstant.PAUSE_BUTTON_TEXT);
         pauseBuildButton.setOnAction(e -> {
-
+            controller.pauseGraphicBuilding();
         });
     }
 
