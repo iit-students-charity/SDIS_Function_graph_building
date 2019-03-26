@@ -6,7 +6,7 @@ import model.Point;
 import model.Tree;
 
 public class SortingTask implements Runnable {
-    private Function function;
+    private final Function function;
     private int numberOfLists;
 
 
@@ -19,25 +19,27 @@ public class SortingTask implements Runnable {
     public void run() {
         double mega = 1000000;
 
-        function.getPoints().clear();
-
         for (int i = (int) function.getXDownLimit(); i <= function.getXUpLimit(); i++) {
-            double summarySortingTime = 0;
+                double summarySortingTime = 0;
 
-            for (int j = 0; j < numberOfLists; j++) {
-                ObservableList<Double> doubles = ListGenerator.generate(i);
+                for (int j = 0; j < numberOfLists; j++) {
+                    ObservableList<Double> doubles = ListGenerator.generate(i);
 
-                double startTime = System.nanoTime();
-                sort(doubles);
-                summarySortingTime += System.nanoTime() - startTime;
-            }
-            double averageSortingTime = (summarySortingTime / numberOfLists) / mega;
-            Point point = new Point(i, averageSortingTime);
-            function.getPoints().add(point);
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException ex) {
-                break;
+                    double startTime = System.nanoTime();
+                    sort(doubles);
+                    summarySortingTime += System.nanoTime() - startTime;
+                }
+                double averageSortingTime = (summarySortingTime / numberOfLists) / mega;
+                Point point = new Point(i, averageSortingTime);
+
+            synchronized (function) {
+                function.getPoints().add(point);
+                try {
+                    function.notifyAll();
+                    Thread.sleep(100);
+                } catch (InterruptedException ex) {
+                    break;
+                }
             }
         }
     }

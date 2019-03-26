@@ -13,50 +13,38 @@ import model.Point;
 
 
 public class GraphicBuildingComponent {
-    private class GraphicForm {
-        private GridPane gridPane;
-
-
-        public GraphicForm() {
-            gridPane = new GridPane();
-        }
-
-        public GridPane getGridPane() {
-            return gridPane;
-        }
-    }
-
     private GridPane gridPane;
 
     private TextField nTextField;
     private TextField kTextField;
     private Button startBuildButton;
-    private Button pauseBuildButton;
+    private Button stopBuildButton;
     private TableView<Point> functionTable;
-    private GraphicForm graphicForm;
+    private Graphic graphicDrawingComp;
 
     private Function function;
     private Controller controller;
 
 
-    public GraphicBuildingComponent(Function function, Controller controller) {
+    public GraphicBuildingComponent(Function function, Graphic graphic, Controller controller) {
         nTextField = new TextField();
         kTextField = new TextField();
         initStartButton();
         initPauseButton();
         initFunctionTable(function);
-        graphicForm = new GraphicForm();
+        graphicDrawingComp = graphic;
 
         gridPane = new GridPane();
         gridPane.getColumnConstraints().add(0, new ColumnConstraints(LayoutConstant.MAIN_FORM_WIDTH / 4));
         gridPane.getColumnConstraints().add(1, new ColumnConstraints(LayoutConstant.MAIN_FORM_WIDTH));
+        gridPane.setGridLinesVisible(true);
         gridPane.add(new VBox(
                 new TwoNodesGrid(new Label("n"), nTextField).getGridPane(),
                 new TwoNodesGrid(new Label("k"), kTextField).getGridPane(),
-                new TwoNodesGrid(startBuildButton, pauseBuildButton).getGridPane(),
+                new TwoNodesGrid(startBuildButton, stopBuildButton).getGridPane(),
                 functionTable
         ), 0, 0);
-        gridPane.add(graphicForm.getGridPane(), 1,0);
+        gridPane.add(graphicDrawingComp.getGroup(), 1,0);
 
         this.function = function;
         this.controller = controller;
@@ -96,9 +84,9 @@ public class GraphicBuildingComponent {
     }
 
     private void initPauseButton() {
-        pauseBuildButton = new Button(LayoutConstant.PAUSE_BUTTON_TEXT);
-        pauseBuildButton.setOnAction(e -> {
-            controller.pauseGraphicBuilding();
+        stopBuildButton = new Button(LayoutConstant.STOP_BUTTON_TEXT);
+        stopBuildButton.setOnAction(e -> {
+            controller.stopGraphicBuilding();
         });
     }
 
@@ -114,5 +102,9 @@ public class GraphicBuildingComponent {
 
     public GridPane getGridPane() {
         return gridPane;
+    }
+
+    public Graphic getGraphicDrawingComp() {
+        return graphicDrawingComp;
     }
 }

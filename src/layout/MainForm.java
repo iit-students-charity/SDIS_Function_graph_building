@@ -16,9 +16,9 @@ public class MainForm {
     private Controller controller;
 
 
-    public MainForm(Function function, Controller controller) {
+    public MainForm(Function function, Graphic graphic, Controller controller) {
         menuBar = createMenuBar();
-        graphicBuildingComponent = new GraphicBuildingComponent(function, controller);
+        graphicBuildingComponent = new GraphicBuildingComponent(function, graphic, controller);
         toolBar = createToolBar();
 
         vBox = new VBox(
@@ -31,6 +31,10 @@ public class MainForm {
 
     public VBox getVBox() {
         return vBox;
+    }
+
+    public GraphicBuildingComponent getGraphicBuildingComponent() {
+        return graphicBuildingComponent;
     }
 
     private MenuBar createMenuBar() {
