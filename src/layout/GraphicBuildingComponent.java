@@ -11,6 +11,8 @@ import javafx.scene.layout.VBox;
 import model.Function;
 import model.Point;
 
+import static sample.Main.MAIN_FORM_WIDTH;
+
 
 public class GraphicBuildingComponent {
     private GridPane gridPane;
@@ -22,21 +24,21 @@ public class GraphicBuildingComponent {
     private TableView<Point> functionTable;
     private Graphic graphicDrawingComp;
 
-    private Function function;
+    private Function arrayFunction;
     private Controller controller;
 
 
-    public GraphicBuildingComponent(Function function, Graphic graphic, Controller controller) {
+    public GraphicBuildingComponent(Function arrayFunction, Graphic graphic, Controller controller) {
         nTextField = new TextField();
         kTextField = new TextField();
         initStartButton();
         initPauseButton();
-        initFunctionTable(function);
+        initFunctionTable(arrayFunction);
         graphicDrawingComp = graphic;
 
         gridPane = new GridPane();
-        gridPane.getColumnConstraints().add(0, new ColumnConstraints(LayoutConstant.MAIN_FORM_WIDTH / 4));
-        gridPane.getColumnConstraints().add(1, new ColumnConstraints(LayoutConstant.MAIN_FORM_WIDTH));
+        gridPane.getColumnConstraints().add(0, new ColumnConstraints(MAIN_FORM_WIDTH / 4));
+        gridPane.getColumnConstraints().add(1, new ColumnConstraints(MAIN_FORM_WIDTH));
         gridPane.setGridLinesVisible(true);
         gridPane.add(new VBox(
                 new TwoNodesGrid(new Label("n"), nTextField).getGridPane(),
@@ -46,7 +48,7 @@ public class GraphicBuildingComponent {
         ), 0, 0);
         gridPane.add(graphicDrawingComp.getGroup(), 1,0);
 
-        this.function = function;
+        this.arrayFunction = arrayFunction;
         this.controller = controller;
     }
 
@@ -62,7 +64,8 @@ public class GraphicBuildingComponent {
     }
 
     private void initStartButton() {
-        startBuildButton = new Button(LayoutConstant.START_BUTTON_TEXT);
+        startBuildButton = new Button("Start");
+
         startBuildButton.setOnAction(e -> {
             String nString = nTextField.getText();
             String kString = kTextField.getText();
@@ -77,14 +80,19 @@ public class GraphicBuildingComponent {
                 return;
             }
 
-            function.setXUpLimit(n);
+            if (k < arrayFunction.getXDownLimit()) {
+                createEmptyDialog("Error", new Label("Entered data is not valid")).show();
+                return;
+            }
+
+            arrayFunction.setXUpLimit(n);
 
             controller.startGraphicBuilding(k);
         });
     }
 
     private void initPauseButton() {
-        stopBuildButton = new Button(LayoutConstant.STOP_BUTTON_TEXT);
+        stopBuildButton = new Button("Stop");
         stopBuildButton.setOnAction(e -> {
             controller.stopGraphicBuilding();
         });

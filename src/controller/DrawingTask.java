@@ -1,7 +1,10 @@
 package controller;
 
+import javafx.scene.paint.Color;
 import layout.Graphic;
 import model.Function;
+
+import java.util.Random;
 
 public class DrawingTask implements Runnable {
     private final Function function;
@@ -15,11 +18,19 @@ public class DrawingTask implements Runnable {
 
     @Override
     public void run() {
+        int colorBound = 2;
         int functionPointsIter = 0;
+
+        graphic.setDrawingColor(Color.color(
+                new Random().nextInt(colorBound),
+                new Random().nextInt(colorBound),
+                new Random().nextInt(colorBound)
+        ));
+
         while (!Thread.currentThread().isInterrupted()) {
             synchronized (function) {
                 if (functionPointsIter < function.getPoints().size()) {
-                    graphic.addPoint(function.getPoints().get(functionPointsIter++));
+                    graphic.drawPoint(function.getPoints().get(functionPointsIter++));
                 }
 
                 try {

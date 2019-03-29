@@ -10,18 +10,26 @@ import layout.MainForm;
 import model.Function;
 
 public class Main extends Application {
+    public static final int MAIN_FORM_HEIGHT = 500;
+    public static final int MAIN_FORM_WIDTH = 600;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Function function = new Function();
+        String mainFormTitle = "Function graph building";
+
+        int arrayFunctionXDownLimit = 2;
+        Function arrayFunction = new Function();
+        arrayFunction.setXDownLimit(arrayFunctionXDownLimit);
+        Function linearFunction = new Function();
+
         Graphic graphic = new Graphic();
-        Controller controller = new Controller(function, graphic);
-        MainForm mainForm = new MainForm(function, graphic, controller);
+        Controller controller = new Controller(arrayFunction, graphic);
+        MainForm mainForm = new MainForm(arrayFunction, graphic, controller);
 
         primaryStage.setResizable(false);
-        primaryStage.setTitle(LayoutConstant.MAIN_FORM_TITLE);
-        primaryStage.setHeight(LayoutConstant.MAIN_FORM_HEIGHT);
-        primaryStage.setWidth(LayoutConstant.MAIN_FORM_WIDTH);
+        primaryStage.setTitle(mainFormTitle);
+        primaryStage.setHeight(MAIN_FORM_HEIGHT);
+        primaryStage.setWidth(MAIN_FORM_WIDTH);
         primaryStage.setScene(new Scene(mainForm.getVBox()));
         primaryStage.show();
     }

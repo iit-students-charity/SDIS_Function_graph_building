@@ -4,10 +4,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class Function {
+    private static final double X_DOWN_LIMIT = -1000;
+    private static final double X_UP_LIMIT = 1000;
+
     private double xDownLimit;
     private double xUpLimit;
-    private static final double X_DOWN_LIMIT = 2;
-    private static final double X_UP_LIMIT = 500;
 
     private ObservableList<Point> points;
 
