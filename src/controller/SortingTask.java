@@ -18,6 +18,7 @@ public class SortingTask implements Runnable {
     @Override
     public void run() {
         double mega = 1000000;
+        int sleepTime = 100;
 
         for (int i = (int) function.getXDownLimit(); i <= function.getXUpLimit(); i++) {
                 double summarySortingTime = 0;
@@ -30,18 +31,20 @@ public class SortingTask implements Runnable {
                     summarySortingTime += System.nanoTime() - startTime;
                 }
                 double averageSortingTime = (summarySortingTime / numberOfLists) / mega;
-                Point point = new Point(i, averageSortingTime);
 
             synchronized (function) {
-                function.getPoints().add(point);
+                function.getPoints().add(new Point(i, averageSortingTime));
                 try {
                     function.notifyAll();
-                    Thread.sleep(100);
+                    Thread.sleep(sleepTime);
                 } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
                     break;
                 }
             }
         }
+
+        Thread.currentThread().interrupt();
     }
 
     private void sort(ObservableList<Double> doubles) {

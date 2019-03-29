@@ -5,13 +5,12 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import layout.Graphic;
-import layout.LayoutConstant;
 import layout.MainForm;
 import model.Function;
 
 public class Main extends Application {
-    public static final int MAIN_FORM_HEIGHT = 500;
-    public static final int MAIN_FORM_WIDTH = 600;
+    public static final int MAIN_FORM_HEIGHT = 700;
+    public static final int MAIN_FORM_WIDTH = 1000;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -23,7 +22,7 @@ public class Main extends Application {
         Function linearFunction = new Function();
 
         Graphic graphic = new Graphic();
-        Controller controller = new Controller(arrayFunction, graphic);
+        Controller controller = new Controller(arrayFunction, linearFunction, graphic);
         MainForm mainForm = new MainForm(arrayFunction, graphic, controller);
 
         primaryStage.setResizable(false);

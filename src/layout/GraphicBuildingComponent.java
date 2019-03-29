@@ -32,12 +32,12 @@ public class GraphicBuildingComponent {
         nTextField = new TextField();
         kTextField = new TextField();
         initStartButton();
-        initPauseButton();
+        initStopButton();
         initFunctionTable(arrayFunction);
         graphicDrawingComp = graphic;
 
         gridPane = new GridPane();
-        gridPane.getColumnConstraints().add(0, new ColumnConstraints(MAIN_FORM_WIDTH / 4));
+        gridPane.getColumnConstraints().add(0, new ColumnConstraints(MAIN_FORM_WIDTH / 9));
         gridPane.getColumnConstraints().add(1, new ColumnConstraints(MAIN_FORM_WIDTH));
         gridPane.setGridLinesVisible(true);
         gridPane.add(new VBox(
@@ -80,7 +80,7 @@ public class GraphicBuildingComponent {
                 return;
             }
 
-            if (k < arrayFunction.getXDownLimit()) {
+            if (n < arrayFunction.getXDownLimit()) {
                 createEmptyDialog("Error", new Label("Entered data is not valid")).show();
                 return;
             }
@@ -91,7 +91,7 @@ public class GraphicBuildingComponent {
         });
     }
 
-    private void initPauseButton() {
+    private void initStopButton() {
         stopBuildButton = new Button("Stop");
         stopBuildButton.setOnAction(e -> {
             controller.stopGraphicBuilding();

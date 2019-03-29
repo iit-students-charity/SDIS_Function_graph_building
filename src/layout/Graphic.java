@@ -10,6 +10,10 @@ import static sample.Main.MAIN_FORM_HEIGHT;
 import static sample.Main.MAIN_FORM_WIDTH;
 
 public class Graphic {
+    private static final int MIN_X_SIZE = 2;
+    private static final int MIN_Y_SIZE = 500;
+    private static final int MIN_POINT_SIZE = 2;
+
     private Group group;
 
     private Canvas canvas;
@@ -31,7 +35,7 @@ public class Graphic {
 
     // Drawing
     public void drawPoint(Point point) {
-        graphic.fillOval(point.getX() * 2, point.getY() * 500, 2, 2);
+        graphic.fillOval(point.getX() * 10, point.getY() * 10, MIN_POINT_SIZE, MIN_POINT_SIZE);
     }
 
     public void setDrawingColor(Color color) {

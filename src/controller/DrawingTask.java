@@ -8,7 +8,7 @@ import java.util.Random;
 
 public class DrawingTask implements Runnable {
     private final Function function;
-    private Graphic graphic;
+    private final Graphic graphic;
 
 
     public DrawingTask(Function function, Graphic graphic){
@@ -30,7 +30,9 @@ public class DrawingTask implements Runnable {
         while (!Thread.currentThread().isInterrupted()) {
             synchronized (function) {
                 if (functionPointsIter < function.getPoints().size()) {
-                    graphic.drawPoint(function.getPoints().get(functionPointsIter++));
+                    synchronized (graphic) {
+                        graphic.drawPoint(function.getPoints().get(functionPointsIter++));
+                    }
                 }
 
                 try {

@@ -3,37 +3,49 @@ package controller;
 import layout.Graphic;
 import model.Function;
 
-public class Controller {
-    private Function function;
+public class Controller {private Function arrayFunction;
+    private Function linearFunction;
     private Graphic graphic;
-    private Thread calcThread;
-    private Thread drawThread;
+    private Thread arrayFunCalcThread;
+    private Thread linFunCalcThread;
+    private Thread arrayFunDrawThread;
+    private Thread linFunDrawThread;
 
 
-    public Controller(Function function, Graphic graphic) {
-        this.function = function;
+    public Controller(Function arrayFunction, Function linearFunction, Graphic graphic) {
+        this.arrayFunction = arrayFunction;
+        this.linearFunction = linearFunction;
         this.graphic = graphic;
-        calcThread = new Thread();
-        drawThread = new Thread();
+        arrayFunCalcThread = new Thread();
+        linFunCalcThread = new Thread();
+        arrayFunDrawThread = new Thread();
+        linFunDrawThread = new Thread();
     }
 
     public void startGraphicBuilding(int numberOfLists) {
-        if (!calcThread.isAlive() || (calcThread.isInterrupted() && drawThread.isInterrupted())) {
-            function.getPoints().clear();
+        if ((!arrayFunCalcThread.isAlive() && !linFunCalcThread.isAlive()) ||
+                (arrayFunCalcThread.isInterrupted() && linFunCalcThread.isInterrupted())) {
+            arrayFunction.getPoints().clear();
+            linearFunction.getPoints().clear();
             graphic.clear();
 
-            drawThread = new Thread(new DrawingTask(function, graphic));
-            calcThread = new Thread(new SortingTask(function, numberOfLists));
-            calcThread.start();
-            drawThread.start();
+            arrayFunCalcThread = new Thread(new SortingTask(arrayFunction, numberOfLists));
+            linFunCalcThread = new Thread(new LinearFunctionCalcTask(linearFunction));
+            arrayFunDrawThread = new Thread(new DrawingTask(arrayFunction, graphic));
+            linFunDrawThread = new Thread(new DrawingTask(linearFunction, graphic));
+            arrayFunCalcThread.start();
+            linFunCalcThread.start();
+            arrayFunDrawThread.start();
+            linFunDrawThread.start();
         }
     }
 
     public void stopGraphicBuilding() {
-        if (!calcThread.isInterrupted() && !drawThread.isInterrupted()) {
-            calcThread.interrupt();
-            drawThread.interrupt();
-            function.getPoints().clear();
+        if (!arrayFunCalcThread.isInterrupted()) {
+            arrayFunCalcThread.interrupt();
+            linFunCalcThread.interrupt();
+            arrayFunDrawThread.interrupt();
+            linFunDrawThread.interrupt();
         }
     }
 }
