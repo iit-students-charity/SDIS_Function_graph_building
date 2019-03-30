@@ -21,7 +21,7 @@ public class Graphic {
 
 
     public Graphic() {
-        canvas = new Canvas(MAIN_FORM_WIDTH, 2 * MAIN_FORM_HEIGHT / 3);
+        canvas = new Canvas(MAIN_FORM_WIDTH, MAIN_FORM_HEIGHT);
         graphic = canvas.getGraphicsContext2D();
 
         group = new Group();

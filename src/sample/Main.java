@@ -9,8 +9,8 @@ import layout.MainForm;
 import model.Function;
 
 public class Main extends Application {
-    public static final int MAIN_FORM_HEIGHT = 700;
-    public static final int MAIN_FORM_WIDTH = 1000;
+    public static final int MAIN_FORM_HEIGHT = 550;
+    public static final int MAIN_FORM_WIDTH = 800;
 
     @Override
     public void start(Stage primaryStage) throws Exception {

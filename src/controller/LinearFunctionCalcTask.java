@@ -3,6 +3,9 @@ package controller;
 import model.Function;
 import model.Point;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 public class LinearFunctionCalcTask implements Runnable {
     private final Function linearFunction;
 
@@ -16,19 +19,25 @@ public class LinearFunctionCalcTask implements Runnable {
         double a = 5;
         double b = -1;
         double step = 0.1;
+        int sleepTime = 100;
 
-        int sleepTime = 30;
+        Lock lock = new ReentrantLock();
 
         for (double x = linearFunction.getXDownLimit(); x <= linearFunction.getXUpLimit(); x += step) {
-            synchronized (linearFunction) {
+            lock.lock();
+
+            try {
                 linearFunction.getPoints().add(new Point(x, a*x + b));
+                System.out.println(new Point(x, a*x + b));
+
                 try {
-                    linearFunction.notifyAll();
                     Thread.sleep(sleepTime);
                 } catch (InterruptedException ex) {
                     Thread.currentThread().interrupt();
                     break;
                 }
+            } finally {
+                lock.unlock();
             }
         }
 

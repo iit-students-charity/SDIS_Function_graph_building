@@ -5,13 +5,16 @@ import model.Function;
 import model.Point;
 import model.Tree;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 public class SortingTask implements Runnable {
-    private final Function function;
+    private final Function arrayFunction;
     private int numberOfLists;
 
 
-    public SortingTask(Function function, int numberOfLists) {
-        this.function = function;
+    public SortingTask(Function arrayFunction, int numberOfLists) {
+        this.arrayFunction = arrayFunction;
         this.numberOfLists = numberOfLists;
     }
 
@@ -20,27 +23,33 @@ public class SortingTask implements Runnable {
         double mega = 1000000;
         int sleepTime = 100;
 
-        for (int i = (int) function.getXDownLimit(); i <= function.getXUpLimit(); i++) {
-                double summarySortingTime = 0;
+        Lock lock = new ReentrantLock();
 
-                for (int j = 0; j < numberOfLists; j++) {
-                    ObservableList<Double> doubles = ListGenerator.generate(i);
+        for (int i = (int) arrayFunction.getXDownLimit(); i <= arrayFunction.getXUpLimit(); i++) {
+            double summarySortingTime = 0;
 
-                    double startTime = System.nanoTime();
-                    sort(doubles);
-                    summarySortingTime += System.nanoTime() - startTime;
-                }
-                double averageSortingTime = (summarySortingTime / numberOfLists) / mega;
+            for (int j = 0; j < numberOfLists; j++) {
+                ObservableList<Double> doubles = ListGenerator.generate(i);
 
-            synchronized (function) {
-                function.getPoints().add(new Point(i, averageSortingTime));
+                double startTime = System.nanoTime();
+                sort(doubles);
+                summarySortingTime += System.nanoTime() - startTime;
+            }
+            double averageSortingTime = (summarySortingTime / numberOfLists) / mega;
+
+            lock.lock();
+
+            try {
+                arrayFunction.getPoints().add(new Point(i, averageSortingTime));
+
                 try {
-                    function.notifyAll();
                     Thread.sleep(sleepTime);
                 } catch (InterruptedException ex) {
                     Thread.currentThread().interrupt();
                     break;
                 }
+            } finally {
+                lock.unlock();
             }
         }
 

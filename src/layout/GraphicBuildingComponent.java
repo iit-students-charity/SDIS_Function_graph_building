@@ -7,10 +7,12 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import model.Function;
 import model.Point;
 
+import static sample.Main.MAIN_FORM_HEIGHT;
 import static sample.Main.MAIN_FORM_WIDTH;
 
 
@@ -37,9 +39,15 @@ public class GraphicBuildingComponent {
         graphicDrawingComp = graphic;
 
         gridPane = new GridPane();
-        gridPane.getColumnConstraints().add(0, new ColumnConstraints(MAIN_FORM_WIDTH / 9));
-        gridPane.getColumnConstraints().add(1, new ColumnConstraints(MAIN_FORM_WIDTH));
+        ColumnConstraints column0 = new ColumnConstraints();
+        column0.setPercentWidth(20);
+        ColumnConstraints column1 = new ColumnConstraints();
+        column1.setPercentWidth(80);
+        gridPane.getColumnConstraints().add(0, column0);
+        gridPane.getColumnConstraints().add(1, column1);
         gridPane.setGridLinesVisible(true);
+
+
         gridPane.add(new VBox(
                 new TwoNodesGrid(new Label("n"), nTextField).getGridPane(),
                 new TwoNodesGrid(new Label("k"), kTextField).getGridPane(),
@@ -110,9 +118,5 @@ public class GraphicBuildingComponent {
 
     public GridPane getGridPane() {
         return gridPane;
-    }
-
-    public Graphic getGraphicDrawingComp() {
-        return graphicDrawingComp;
     }
 }

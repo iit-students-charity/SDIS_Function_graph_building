@@ -5,6 +5,8 @@ import layout.Graphic;
 import model.Function;
 
 import java.util.Random;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class DrawingTask implements Runnable {
     private final Function function;
@@ -27,19 +29,19 @@ public class DrawingTask implements Runnable {
                 new Random().nextInt(colorBound)
         ));
 
-        while (!Thread.currentThread().isInterrupted()) {
-            synchronized (function) {
-                if (functionPointsIter < function.getPoints().size()) {
-                    synchronized (graphic) {
-                        graphic.drawPoint(function.getPoints().get(functionPointsIter++));
-                    }
-                }
+        Lock lock = new ReentrantLock();
 
-                try {
-                    function.wait();
-                } catch (InterruptedException ex) {
-                    Thread.currentThread().interrupt();
+        while (!Thread.currentThread().isInterrupted()) {
+            lock.lock();
+
+            try {
+                if (functionPointsIter < function.getPoints().size()) {
+                    lock.lock();
+                    graphic.drawPoint(function.getPoints().get(functionPointsIter++));
+                    lock.unlock();
                 }
+            } finally {
+                lock.unlock();
             }
         }
     }

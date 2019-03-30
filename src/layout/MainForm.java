@@ -3,8 +3,11 @@ package layout;
 import controller.Controller;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.ToolBar;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import model.Function;
+
+import static sample.Main.MAIN_FORM_HEIGHT;
 
 public class MainForm {
     private VBox vBox;
@@ -31,10 +34,6 @@ public class MainForm {
 
     public VBox getVBox() {
         return vBox;
-    }
-
-    public GraphicBuildingComponent getGraphicBuildingComponent() {
-        return graphicBuildingComponent;
     }
 
     private MenuBar createMenuBar() {
