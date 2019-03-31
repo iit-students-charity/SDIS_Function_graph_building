@@ -9,8 +9,7 @@ public class Controller {private Function arrayFunction;
     private Graphic graphic;
     private Thread arrayFunCalcThread;
     private Thread linFunCalcThread;
-    private Thread arrayFunDrawThread;
-    private Thread linFunDrawThread;
+    private Thread drawThread;
 
 
     public Controller(Function arrayFunction, Function linearFunction, Graphic graphic) {
@@ -19,8 +18,7 @@ public class Controller {private Function arrayFunction;
         this.graphic = graphic;
         arrayFunCalcThread = new Thread();
         linFunCalcThread = new Thread();
-        arrayFunDrawThread = new Thread();
-        linFunDrawThread = new Thread();
+        drawThread = new Thread();
     }
 
     public void startGraphicBuilding(int numberOfLists) {
@@ -32,12 +30,15 @@ public class Controller {private Function arrayFunction;
 
             arrayFunCalcThread = new Thread(new SortingTask(arrayFunction, numberOfLists));
             linFunCalcThread = new Thread(new LinearFunctionCalcTask(linearFunction));
-            arrayFunDrawThread = new Thread(new DrawingTask(arrayFunction, graphic));
-            linFunDrawThread = new Thread(new DrawingTask(linearFunction, graphic));
+            drawThread = new Thread(new DrawingTask(graphic));
+
+            arrayFunCalcThread.setDaemon(true);
+            linFunCalcThread.setDaemon(true);
+            drawThread.setDaemon(true);
+
             arrayFunCalcThread.start();
             linFunCalcThread.start();
-            arrayFunDrawThread.start();
-            linFunDrawThread.start();
+            drawThread.start();
         }
     }
 
@@ -45,8 +46,7 @@ public class Controller {private Function arrayFunction;
         if (!arrayFunCalcThread.isInterrupted()) {
             arrayFunCalcThread.interrupt();
             linFunCalcThread.interrupt();
-            arrayFunDrawThread.interrupt();
-            linFunDrawThread.interrupt();
+            drawThread.interrupt();
         }
     }
 }

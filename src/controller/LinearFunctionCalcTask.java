@@ -19,7 +19,7 @@ public class LinearFunctionCalcTask implements Runnable {
     public void run() {
         double a = 5;
         double b = -1;
-        double step = 10;
+        double step = 5;
         int sleepTime = 70;
 
         Lock lock = new ReentrantLock();

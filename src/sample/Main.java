@@ -21,7 +21,7 @@ public class Main extends Application {
         arrayFunction.setXDownLimit(arrayFunctionXDownLimit);
         Function linearFunction = new Function();
 
-        Graphic graphic = new Graphic();
+        Graphic graphic = new Graphic(arrayFunction, linearFunction);
         Controller controller = new Controller(arrayFunction, linearFunction, graphic);
         MainForm mainForm = new MainForm(arrayFunction, graphic, controller);
 
