@@ -3,9 +3,6 @@ package controller;
 import layout.Graphic;
 import model.Function;
 
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class Controller {private Function arrayFunction;
     private Function linearFunction;

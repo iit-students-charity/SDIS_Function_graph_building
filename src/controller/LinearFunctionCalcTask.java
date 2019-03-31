@@ -3,6 +3,7 @@ package controller;
 import model.Function;
 import model.Point;
 
+import java.awt.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -18,8 +19,8 @@ public class LinearFunctionCalcTask implements Runnable {
     public void run() {
         double a = 5;
         double b = -1;
-        double step = 0.1;
-        int sleepTime = 100;
+        double step = 10;
+        int sleepTime = 70;
 
         Lock lock = new ReentrantLock();
 

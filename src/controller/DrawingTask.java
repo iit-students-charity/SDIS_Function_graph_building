@@ -23,11 +23,13 @@ public class DrawingTask implements Runnable {
         int colorBound = 2;
         int functionPointsIter = 0;
 
-        graphic.setDrawingColor(Color.color(
+        /*Color color = Color.color(
                 new Random().nextInt(colorBound),
                 new Random().nextInt(colorBound),
                 new Random().nextInt(colorBound)
-        ));
+        );*/
+
+        Color color = Color.RED;
 
         Lock lock = new ReentrantLock();
 
@@ -37,6 +39,7 @@ public class DrawingTask implements Runnable {
             try {
                 if (functionPointsIter < function.getPoints().size()) {
                     lock.lock();
+                    graphic.setDrawingColor(color);
                     graphic.drawPoint(function.getPoints().get(functionPointsIter++));
                     lock.unlock();
                 }

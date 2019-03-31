@@ -4,8 +4,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class Function {
-    private static final double X_DOWN_LIMIT = 0;
-    private static final double X_UP_LIMIT = 1000;
+    public static final double MIN_X_DOWN_LIMIT = -1000;
+    public static final double MAX_X_UP_LIMIT = 1000;
 
     private double xDownLimit;
     private double xUpLimit;
@@ -21,7 +21,7 @@ public class Function {
     }
 
     public Function() {
-        this(X_DOWN_LIMIT, X_UP_LIMIT);
+        this(MIN_X_DOWN_LIMIT, MAX_X_UP_LIMIT);
     }
 
     public double getXUpLimit() {

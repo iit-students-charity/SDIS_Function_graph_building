@@ -1,41 +1,67 @@
 package layout;
 
-import javafx.scene.Group;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.paint.Color;
+import model.ColoredPoint;
+import model.Function;
 import model.Point;
 
-import static sample.Main.MAIN_FORM_HEIGHT;
-import static sample.Main.MAIN_FORM_WIDTH;
-
 public class Graphic {
-    private static final int MIN_X_SIZE = 2;
-    private static final int MIN_Y_SIZE = 500;
-    private static final int MIN_POINT_SIZE = 2;
+    private static final int MIN_SCALE = 2;
+    private static final int POINT_SIZE = 2;
 
-    private Group group;
+    private double scale;
+    private double currentCanvasSize;
 
     private Canvas canvas;
+    private ScrollPane scrollPane;
     private GraphicsContext graphic;
+
+    private ObservableList<ColoredPoint> coloredPoints;
 
 
     public Graphic() {
-        canvas = new Canvas(MAIN_FORM_WIDTH, MAIN_FORM_HEIGHT);
+        scale = MIN_SCALE;
+
+        currentCanvasSize = Function.MAX_X_UP_LIMIT - Function.MIN_X_DOWN_LIMIT;
+        canvas = new Canvas();
+        initCanvasConfig();
+
         graphic = canvas.getGraphicsContext2D();
 
-        group = new Group();
-        group.getChildren().add(canvas);
+        scrollPane = new ScrollPane();
+        initScrollPaneConfig();
+
+        coloredPoints = FXCollections.observableArrayList();
     }
 
-    public Group getGroup() {
-        return group;
+    public ScrollPane getScrollPane() {
+        return scrollPane;
+    }
+
+    private void initScrollPaneConfig() {
+
+        scrollPane.setPannable(true);
+        scrollPane.setContent(canvas);
+    }
+
+    private void initCanvasConfig() {
+        canvas.setWidth(currentCanvasSize);
+        canvas.setHeight(currentCanvasSize);
     }
 
 
     // Drawing
     public void drawPoint(Point point) {
-        graphic.fillOval(point.getX() * 10, point.getY() * 10, MIN_POINT_SIZE, MIN_POINT_SIZE);
+        coloredPoints.add(new ColoredPoint(point, (Color) graphic.getFill()));
+        graphic.fillOval(point.getX() * scale + currentCanvasSize / 2,
+                point.getY() * scale + currentCanvasSize / 2,
+                POINT_SIZE, POINT_SIZE
+        );
     }
 
     public void setDrawingColor(Color color) {
@@ -45,5 +71,4 @@ public class Graphic {
     public void clear() {
         graphic.clearRect(0,0, canvas.getWidth(), canvas.getHeight());
     }
-
 }
