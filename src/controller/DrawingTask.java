@@ -1,10 +1,7 @@
 package controller;
 
-import javafx.scene.paint.Color;
 import layout.Graphic;
-import model.Function;
 
-import java.util.Random;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -21,7 +18,13 @@ public class DrawingTask implements Runnable {
         Lock lock = new ReentrantLock();
 
         while (!Thread.currentThread().isInterrupted()) {
-            graphic.update();
+            lock.lock();
+
+            try {
+                graphic.update();
+            } finally {
+                lock.unlock();
+            }
         }
     }
 }

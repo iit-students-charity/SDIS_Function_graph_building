@@ -19,8 +19,8 @@ public class LinearFunctionCalcTask implements Runnable {
     public void run() {
         double a = 5;
         double b = -1;
-        double step = 5;
-        int sleepTime = 70;
+        double step = 1;
+        int sleepTime = 30;
 
         Lock lock = new ReentrantLock();
 
@@ -29,7 +29,6 @@ public class LinearFunctionCalcTask implements Runnable {
 
             try {
                 linearFunction.getPoints().add(new Point(x, a*x + b));
-                System.out.println(new Point(x, a*x + b));
 
                 try {
                     Thread.sleep(sleepTime);

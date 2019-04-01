@@ -15,8 +15,13 @@ import javafx.scene.layout.VBox;
 import model.Function;
 import model.Point;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 
 public class GraphicBuildingComponent {
+    private static final String SCALE_TEXT = "Scale: ";
+
     private GridPane gridPane;
 
     private TextField nTextField;
@@ -50,7 +55,7 @@ public class GraphicBuildingComponent {
         initIncGraphicScaleButtonConfig();
         decGraphicScaleButton = new Button("-");
         initDecGraphicScaleButtonConfig();
-        currentGraphicScaleLabel = new Label("Scale: 100%");
+        currentGraphicScaleLabel = new Label(SCALE_TEXT + (int) (graphic.getScale() * 100)  + "%");
 
         gridPane = new GridPane();
         initGridPaneConfig();
@@ -108,12 +113,16 @@ public class GraphicBuildingComponent {
                 n = Double.parseDouble(nString);
                 k = Integer.parseInt(kString);
             } catch (NumberFormatException ex) {
-                createEmptyDialog("Error", new Label("Entered data is not valid")).show();
+                createErrorDialog(new Label("Entered data is not valid")).show();
                 return;
             }
 
             if (n < arrayFunction.getXDownLimit()) {
-                createEmptyDialog("Error", new Label("Entered data is not valid")).show();
+                createErrorDialog(new Label("n parameter is less than min function down limit")).show();
+                return;
+            }
+            if (n > arrayFunction.getXUpLimit()) {
+                createErrorDialog(new Label("n parameter is greater than max function up limit")).show();
                 return;
             }
 
@@ -140,18 +149,24 @@ public class GraphicBuildingComponent {
     }
 
     private void initIncGraphicScaleButtonConfig() {
-
+        incGraphicScaleButton.setOnAction(e -> {
+            controller.incrementGraphicScale();
+            currentGraphicScaleLabel.setText(SCALE_TEXT + (int) (graphic.getScale() * 100) + "%");
+        });
     }
 
     private void initDecGraphicScaleButtonConfig() {
-
+        decGraphicScaleButton.setOnAction(e -> {
+            controller.decrementGraphicScale();
+            currentGraphicScaleLabel.setText(SCALE_TEXT + (int) (graphic.getScale() * 100) + "%");
+        });
     }
 
 
-    private Alert createEmptyDialog(String title, Node content) {
+    private Alert createErrorDialog(Node content) {
         Alert alert = new Alert(Alert.AlertType.NONE);
 
-        alert.setTitle(title);
+        alert.setTitle("Error");
         alert.getDialogPane().setContent(content);
         alert.getButtonTypes().add(ButtonType.OK);
 
