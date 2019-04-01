@@ -15,9 +15,6 @@ import javafx.scene.layout.VBox;
 import model.Function;
 import model.Point;
 
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
 
 public class GraphicBuildingComponent {
     private static final String SCALE_TEXT = "Scale: ";
@@ -123,6 +120,10 @@ public class GraphicBuildingComponent {
             }
             if (n > arrayFunction.getXUpLimit()) {
                 createErrorDialog(new Label("n parameter is greater than max function up limit")).show();
+                return;
+            }
+            if (k < 1) {
+                createErrorDialog(new Label("k parameter has to be 1 or greater")).show();
                 return;
             }
 

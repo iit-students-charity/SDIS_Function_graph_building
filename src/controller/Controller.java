@@ -17,10 +17,11 @@ public class Controller {private Function arrayFunction;
         this.arrayFunction = arrayFunction;
         this.linearFunction = linearFunction;
         this.graphic = graphic;
-        arrayFunCalcThread = new Thread();
-        linFunCalcThread = new Thread();
+        arrayFunCalcThread = new Thread("array-calc");
+        linFunCalcThread = new Thread("linear-calc");
 
         Thread drawThread = new Thread(new DrawingTask(graphic));
+        drawThread.setName("draw");
         drawThread.setDaemon(true);
         drawThread.start();
     }
@@ -29,7 +30,7 @@ public class Controller {private Function arrayFunction;
         if (!arrayFunCalcThread.isAlive() || arrayFunCalcThread.isInterrupted()) {
             arrayFunction.getPoints().clear();
             linearFunction.getPoints().clear();
-            graphic.clear();
+            graphic.eraseFunctionGraphics();
 
             arrayFunCalcThread = new Thread(new SortingTask(arrayFunction, numberOfLists));
             linFunCalcThread = new Thread(new LinearFunctionCalcTask(linearFunction));

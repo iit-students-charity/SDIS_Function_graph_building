@@ -1,60 +1,60 @@
 package layout;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import model.ColoredPoint;
 import model.Function;
 import model.Point;
 
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class Graphic {
     private static final double MIN_SCALE = 0.2; // no more dec cos of centring and white filling in scroll pane off
-    private static final double MAX_SCALE = 2.8;
+    private static final double MAX_SCALE = 2.0;
     private static final double SCALING_STEP = 0.2;
     private static final double SCROLL_PANE_CENTER_POSITION = 0.5;
 
     private double prevScale;
     private double scale;
     private double canvasSize;
+    private boolean hasToClear;
 
     private Canvas canvas;
     private ScrollPane scrollPane;
     private GraphicsContext graphic;
 
-    private ObservableList<ColoredPoint> coloredPoints;
     private ObservableList<Point> arrayFunPoints;
     private ObservableList<Point> linearFunPoints;
     private int arrayFunPointsIter;
     private int linearFunPointsIter;
     private Point arrayFunPrevPoint;
     private Point linearFunPrevPoint;
+    private Color arrayFunColor;
+    private Color linearFunColor;
 
 
     public Graphic(Function arrayFunction, Function linearFunction) {
-        scale = MIN_SCALE;
+        scale = 5 * MIN_SCALE;
         prevScale = scale;
+        hasToClear = false;
 
         canvas = new Canvas();
         updateCanvasConfig();
 
         graphic = canvas.getGraphicsContext2D();
-        clear();
+        eraseFunctionGraphics();
 
         scrollPane = new ScrollPane();
         initScrollPaneConfig();
 
-        coloredPoints = FXCollections.observableArrayList();
         arrayFunPoints = arrayFunction.getPoints();
         linearFunPoints = linearFunction.getPoints();
         arrayFunPointsIter = 0;
         linearFunPointsIter = 0;
+        arrayFunColor = Color.GREEN;
+        linearFunColor = Color.ALICEBLUE;
     }
 
     public ScrollPane getScrollPane() {
@@ -83,12 +83,17 @@ public class Graphic {
     }
 
     public void update() {
+        if (hasToClear) {
+            clear();
+            hasToClear = false;
+        }
+
         if (scale != prevScale) {
             updateCanvasConfig();
-            clear();
+            eraseFunctionGraphics();
 
-            scrollPane.setVvalue(SCROLL_PANE_CENTER_POSITION);
-            scrollPane.setHvalue(SCROLL_PANE_CENTER_POSITION);
+            scrollPane.setVvalue(scrollPane.getVvalue());
+            scrollPane.setHvalue(scrollPane.getHvalue());
 
             prevScale = scale;
         }
@@ -98,7 +103,7 @@ public class Graphic {
         graphic.setLineWidth(functionLineWidth);
 
         if (arrayFunPointsIter < arrayFunPoints.size()) {
-            graphic.setStroke(Color.RED);
+            graphic.setStroke(arrayFunColor);
 
             Point nextPoint = new Point(
                     arrayFunPoints.get(arrayFunPointsIter).getX() * scale + halfCanvasSize,
@@ -116,7 +121,7 @@ public class Graphic {
         }
 
         if (linearFunPointsIter < linearFunPoints.size()) {
-            graphic.setStroke(Color.GREEN);
+            graphic.setStroke(linearFunColor);
 
             Point nextPoint = new Point(
                     linearFunPoints.get(linearFunPointsIter).getX() * scale + halfCanvasSize,
@@ -197,20 +202,22 @@ public class Graphic {
     }
 
     public void incrementScale() {
-        if (scale >= MAX_SCALE) {
-            return;
+        if (scale < MAX_SCALE) {
+            scale += SCALING_STEP;
         }
-        scale += SCALING_STEP;
     }
 
     public void decrementScale() {
-        if (scale <= MIN_SCALE) {
-            return;
+        if (scale > MIN_SCALE) {
+            scale -= SCALING_STEP;
         }
-        scale -= SCALING_STEP;
     }
 
-    public void clear() {
+    public void eraseFunctionGraphics() {
+        hasToClear = true;
+    }
+
+    private void clear() {
         arrayFunPointsIter = 0;
         linearFunPointsIter = 0;
         arrayFunPrevPoint = null;
