@@ -4,7 +4,7 @@ import controller.Controller;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import layout.Graphic;
+import layout.GraphicCanvas;
 import layout.MainForm;
 import model.Function;
 
@@ -21,7 +21,7 @@ public class Main extends Application {
         arrayFunction.setXDownLimit(arrayFunctionXDownLimit);
         Function linearFunction = new Function();
 
-        Graphic graphic = new Graphic(arrayFunction, linearFunction);
+        GraphicCanvas graphic = new GraphicCanvas(arrayFunction, linearFunction);
         Controller controller = new Controller(arrayFunction, linearFunction, graphic);
         MainForm mainForm = new MainForm(arrayFunction, graphic, controller);
 

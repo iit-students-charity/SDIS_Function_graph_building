@@ -9,8 +9,10 @@ public class ListGenerator {
     public static ObservableList<Double> generate(int sizeOfList) {
         ObservableList<Double> resultList = FXCollections.observableArrayList();
 
+        Random random = new Random(System.currentTimeMillis());
+
         for (int listIterator = 0; listIterator < sizeOfList; listIterator++) {
-            resultList.add(new Random().nextDouble());
+            resultList.add(random.nextDouble());
         }
 
         return resultList;

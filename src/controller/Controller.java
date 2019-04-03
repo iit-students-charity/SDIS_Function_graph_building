@@ -1,22 +1,19 @@
 package controller;
 
-import layout.Graphic;
+import layout.GraphicCanvas;
 import model.Function;
-
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 
 public class Controller {private Function arrayFunction;
     private Function linearFunction;
-    private Graphic graphic;
+    private GraphicCanvas graphicCanvas;
     private Thread arrayFunCalcThread;
     private Thread linFunCalcThread;
 
-    public Controller(Function arrayFunction, Function linearFunction, Graphic graphic) {
+    public Controller(Function arrayFunction, Function linearFunction, GraphicCanvas graphic) {
         this.arrayFunction = arrayFunction;
         this.linearFunction = linearFunction;
-        this.graphic = graphic;
+        this.graphicCanvas = graphic;
         arrayFunCalcThread = new Thread("array-calc");
         linFunCalcThread = new Thread("linear-calc");
 
@@ -30,7 +27,7 @@ public class Controller {private Function arrayFunction;
         if (!arrayFunCalcThread.isAlive() || arrayFunCalcThread.isInterrupted()) {
             arrayFunction.getPoints().clear();
             linearFunction.getPoints().clear();
-            graphic.eraseFunctionGraphics();
+            graphicCanvas.eraseFunctionGraphics();
 
             arrayFunCalcThread = new Thread(new SortingTask(arrayFunction, numberOfLists));
             linFunCalcThread = new Thread(new LinearFunctionCalcTask(linearFunction));
@@ -44,25 +41,11 @@ public class Controller {private Function arrayFunction;
     }
 
     public void incrementGraphicScale() {
-        Lock lock = new ReentrantLock();
-        lock.lock();
-
-        try {
-            graphic.incrementScale();
-        } finally {
-            lock.unlock();
-        }
+        graphicCanvas.incrementScale();
     }
 
     public void decrementGraphicScale() {
-        Lock lock = new ReentrantLock();
-        lock.lock();
-
-        try {
-            graphic.decrementScale();
-        } finally {
-            lock.unlock();
-        }
+        graphicCanvas.decrementScale();
     }
 
     public void stopGraphicBuilding() {

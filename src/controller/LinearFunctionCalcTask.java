@@ -3,7 +3,6 @@ package controller;
 import model.Function;
 import model.Point;
 
-import java.awt.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 

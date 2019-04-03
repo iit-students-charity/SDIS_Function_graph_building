@@ -1,5 +1,6 @@
 package layout;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -10,11 +11,12 @@ import model.Function;
 import model.Point;
 
 
-public class Graphic {
-    private static final double MIN_SCALE = 0.2; // no more dec cos of centring and white filling in scroll pane off
-    private static final double MAX_SCALE = 2.0;
-    private static final double SCALING_STEP = 0.2;
+public class GraphicCanvas {
+    private static final double MIN_SCALE = 0.1;
+    private static final double MAX_SCALE = 1.5;
+    private static final double SCALING_STEP = 0.1;
     private static final double SCROLL_PANE_CENTER_POSITION = 0.5;
+    private final double MARK_SPACING = 20;
 
     private double prevScale;
     private double scale;
@@ -35,8 +37,8 @@ public class Graphic {
     private Color linearFunColor;
 
 
-    public Graphic(Function arrayFunction, Function linearFunction) {
-        scale = 5 * MIN_SCALE;
+    public GraphicCanvas(Function arrayFunction, Function linearFunction) {
+        scale = MIN_SCALE;
         prevScale = scale;
         hasToClear = false;
 
@@ -54,7 +56,7 @@ public class Graphic {
         arrayFunPointsIter = 0;
         linearFunPointsIter = 0;
         arrayFunColor = Color.GREEN;
-        linearFunColor = Color.ALICEBLUE;
+        linearFunColor = Color.RED;
     }
 
     public ScrollPane getScrollPane() {
@@ -63,6 +65,14 @@ public class Graphic {
 
     public double getScale() {
         return scale;
+    }
+
+    public Color getArrayFunColor() {
+        return arrayFunColor;
+    }
+
+    public Color getLinearFunColor() {
+        return linearFunColor;
     }
 
 
@@ -77,7 +87,7 @@ public class Graphic {
 
     // Drawing and updating
     private void updateCanvasConfig() {
-        canvasSize = (Function.MAX_X_UP_LIMIT - Function.MIN_X_DOWN_LIMIT + Function.MAX_X_UP_LIMIT / 8) * scale;
+        canvasSize = (Math.max(Math.abs(Function.MIN_X_DOWN_LIMIT), Function.MAX_X_UP_LIMIT)) * scale;
         canvas.setWidth(canvasSize);
         canvas.setHeight(canvasSize);
     }
@@ -92,8 +102,8 @@ public class Graphic {
             updateCanvasConfig();
             eraseFunctionGraphics();
 
-            scrollPane.setVvalue(scrollPane.getVvalue());
-            scrollPane.setHvalue(scrollPane.getHvalue());
+            scrollPane.setVvalue(SCROLL_PANE_CENTER_POSITION);
+            scrollPane.setHvalue(SCROLL_PANE_CENTER_POSITION);
 
             prevScale = scale;
         }
@@ -102,10 +112,12 @@ public class Graphic {
         double halfCanvasSize = canvasSize / 2;
         graphic.setLineWidth(functionLineWidth);
 
+        Point nextPoint;
+
         if (arrayFunPointsIter < arrayFunPoints.size()) {
             graphic.setStroke(arrayFunColor);
 
-            Point nextPoint = new Point(
+            nextPoint = new Point(
                     arrayFunPoints.get(arrayFunPointsIter).getX() * scale + halfCanvasSize,
                     -arrayFunPoints.get(arrayFunPointsIter).getY() * scale + halfCanvasSize
             );
@@ -114,7 +126,10 @@ public class Graphic {
                 arrayFunPrevPoint = nextPoint;
             }
 
-            graphic.strokeLine(arrayFunPrevPoint.getX(), arrayFunPrevPoint.getY(), nextPoint.getX(), nextPoint.getY());
+            graphic.strokeLine(
+                    arrayFunPrevPoint.getX(), arrayFunPrevPoint.getY(),
+                    nextPoint.getX(), nextPoint.getY()
+            );
 
             arrayFunPrevPoint = nextPoint;
             arrayFunPointsIter++;
@@ -123,7 +138,7 @@ public class Graphic {
         if (linearFunPointsIter < linearFunPoints.size()) {
             graphic.setStroke(linearFunColor);
 
-            Point nextPoint = new Point(
+            nextPoint = new Point(
                     linearFunPoints.get(linearFunPointsIter).getX() * scale + halfCanvasSize,
                     -linearFunPoints.get(linearFunPointsIter).getY() * scale + halfCanvasSize
             );
@@ -132,7 +147,10 @@ public class Graphic {
                 linearFunPrevPoint = nextPoint;
             }
 
-            graphic.strokeLine(linearFunPrevPoint.getX(), linearFunPrevPoint.getY(), nextPoint.getX(), nextPoint.getY());
+            graphic.strokeLine(
+                    linearFunPrevPoint.getX(), linearFunPrevPoint.getY(),
+                    nextPoint.getX(), nextPoint.getY()
+            );
 
             linearFunPrevPoint = nextPoint;
             linearFunPointsIter++;
@@ -152,11 +170,10 @@ public class Graphic {
         graphic.strokeLine(halfCanvasSize, 0, halfCanvasSize, canvasSize); // 'y' axis base
         graphic.strokeLine(0, halfCanvasSize, canvasSize, halfCanvasSize); // 'x' axis base
 
-        double coorMarkSpacing = 20;
         double coorMarkHalfLength = 5;
         int whereToWriteMarkText = 2;
 
-        for (double eachCoorMark = 0; eachCoorMark <= canvasSize / 2; eachCoorMark += coorMarkSpacing) {
+        for (double eachCoorMark = 0; eachCoorMark <= canvasSize / 2; eachCoorMark += MARK_SPACING) {
             if (eachCoorMark == 0) {
                 continue;
             }
@@ -181,7 +198,7 @@ public class Graphic {
                     halfCanvasSize + coorMarkHalfLength, halfCanvasSize + eachCoorMark
             ); // 'y' axis negatives
 
-            if ((eachCoorMark % (coorMarkSpacing * whereToWriteMarkText)) == 0) {
+            if ((eachCoorMark % (MARK_SPACING * whereToWriteMarkText)) == 0) {
                 // 'x' axis positives mark
                 graphic.strokeText(String.valueOf((int) (eachCoorMark / scale)),
                         halfCanvasSize + eachCoorMark,halfCanvasSize + 3 * coorMarkHalfLength);
@@ -203,14 +220,18 @@ public class Graphic {
 
     public void incrementScale() {
         if (scale < MAX_SCALE) {
-            scale += SCALING_STEP;
+            scale = scale + SCALING_STEP;
         }
     }
 
     public void decrementScale() {
         if (scale > MIN_SCALE) {
-            scale -= SCALING_STEP;
+            scale = scale - SCALING_STEP;
         }
+    }
+
+    public double getSingleScaleSegment() {
+        return MARK_SPACING / scale;
     }
 
     public void eraseFunctionGraphics() {
@@ -223,6 +244,7 @@ public class Graphic {
         arrayFunPrevPoint = null;
         linearFunPrevPoint = null;
 
+        // To avoid axes overlaying
         graphic.setFill(Color.WHITE);
         graphic.fillRect(0,0, canvas.getWidth(), canvas.getHeight());
         updateCoordinateAxes();

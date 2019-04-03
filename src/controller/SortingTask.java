@@ -21,7 +21,7 @@ public class SortingTask implements Runnable {
     @Override
     public void run() {
         double mega = 100;
-        int sleepTime = 100;
+        int sleepTime = 70;
 
         Lock lock = new ReentrantLock();
 

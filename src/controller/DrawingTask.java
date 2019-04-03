@@ -1,15 +1,15 @@
 package controller;
 
-import layout.Graphic;
+import layout.GraphicCanvas;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class DrawingTask implements Runnable {
-    private final Graphic graphic;
+    private final GraphicCanvas graphic;
 
 
-    public DrawingTask(Graphic graphic){
+    public DrawingTask(GraphicCanvas graphic){
         this.graphic = graphic;
     }
 

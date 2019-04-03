@@ -1,17 +1,20 @@
 package layout;
 
-
 import controller.Controller;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import model.Function;
 import model.Point;
 
@@ -21,12 +24,13 @@ public class GraphicBuildingComponent {
 
     private GridPane gridPane;
 
+    private Label singleScaleSegment;
     private TextField nTextField;
     private TextField kTextField;
     private Button startBuildButton;
     private Button stopBuildButton;
     private TableView<Point> functionTable;
-    private Graphic graphic;
+    private GraphicCanvas graphic;
 
     private Button incGraphicScaleButton;
     private Button decGraphicScaleButton;
@@ -36,7 +40,8 @@ public class GraphicBuildingComponent {
     private Controller controller;
 
 
-    public GraphicBuildingComponent(Function arrayFunction, Graphic graphic, Controller controller) {
+    public GraphicBuildingComponent(Function arrayFunction, GraphicCanvas graphic, Controller controller) {
+        singleScaleSegment = new Label("Single seg.: " + (int) graphic.getSingleScaleSegment());
         nTextField = new TextField();
         kTextField = new TextField();
         startBuildButton = new Button("Start");
@@ -81,7 +86,15 @@ public class GraphicBuildingComponent {
                 functionTable
         );
 
-        HBox scalingBox = new HBox(decGraphicScaleButton, currentGraphicScaleLabel, incGraphicScaleButton);
+        HBox scalingBox = new HBox(
+                singleScaleSegment,
+                new Separator(Orientation.VERTICAL),
+                decGraphicScaleButton, currentGraphicScaleLabel, incGraphicScaleButton,
+                new Separator(Orientation.VERTICAL),
+                createFunctionHintLine(graphic.getArrayFunColor()), new Label("Array"),
+                new Separator(Orientation.VERTICAL),
+                createFunctionHintLine(graphic.getLinearFunColor()), new Label("5x - 1")
+        );
         scalingBox.setAlignment(Pos.CENTER);
         scalingBox.setSpacing(5);
 
@@ -103,6 +116,8 @@ public class GraphicBuildingComponent {
         startBuildButton.setOnAction(e -> {
             String nString = nTextField.getText();
             String kString = kTextField.getText();
+
+            arrayFunction.setXUpLimit(Function.MAX_X_UP_LIMIT);
 
             double n;
             int k;
@@ -153,6 +168,7 @@ public class GraphicBuildingComponent {
         incGraphicScaleButton.setOnAction(e -> {
             controller.incrementGraphicScale();
             currentGraphicScaleLabel.setText(SCALE_TEXT + (int) (graphic.getScale() * 100) + "%");
+            singleScaleSegment.setText("Single seg.: " + (int) graphic.getSingleScaleSegment());
         });
     }
 
@@ -160,6 +176,7 @@ public class GraphicBuildingComponent {
         decGraphicScaleButton.setOnAction(e -> {
             controller.decrementGraphicScale();
             currentGraphicScaleLabel.setText(SCALE_TEXT + (int) (graphic.getScale() * 100) + "%");
+            singleScaleSegment.setText("Single seg.: " + (int) graphic.getSingleScaleSegment());
         });
     }
 
@@ -172,5 +189,14 @@ public class GraphicBuildingComponent {
         alert.getButtonTypes().add(ButtonType.OK);
 
         return alert;
+    }
+
+    private Canvas createFunctionHintLine(Color functionColor) {
+        Canvas canvas = new Canvas(20, 3);
+        GraphicsContext graphicsContext2D = canvas.getGraphicsContext2D();
+        graphicsContext2D.setFill(functionColor);
+        graphicsContext2D.fillRect(0,0, canvas.getWidth(), canvas.getHeight());
+
+        return canvas;
     }
 }
