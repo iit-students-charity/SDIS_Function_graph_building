@@ -4,8 +4,8 @@ import controller.Controller;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import layout.GraphicBuildingComponent;
 import layout.GraphicCanvas;
-import layout.MainForm;
 import model.Function;
 
 public class Main extends Application {
@@ -23,13 +23,13 @@ public class Main extends Application {
 
         GraphicCanvas graphic = new GraphicCanvas(arrayFunction, linearFunction);
         Controller controller = new Controller(arrayFunction, linearFunction, graphic);
-        MainForm mainForm = new MainForm(arrayFunction, graphic, controller);
+        GraphicBuildingComponent graphicBuildingComponent = new GraphicBuildingComponent(arrayFunction, graphic, controller);
 
         primaryStage.setResizable(false);
         primaryStage.setTitle(mainFormTitle);
         primaryStage.setHeight(MAIN_FORM_HEIGHT);
         primaryStage.setWidth(MAIN_FORM_WIDTH);
-        primaryStage.setScene(new Scene(mainForm.getVBox()));
+        primaryStage.setScene(new Scene(graphicBuildingComponent.getGridPane()));
         primaryStage.show();
     }
 
