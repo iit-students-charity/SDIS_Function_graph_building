@@ -9,6 +9,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import model.Function;
 import model.Point;
+import sample.Main;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 
 public class GraphicCanvas {
@@ -220,13 +224,13 @@ public class GraphicCanvas {
 
     public void incrementScale() {
         if (scale < MAX_SCALE) {
-            scale = scale + SCALING_STEP;
+            scale = new BigDecimal(scale + SCALING_STEP).setScale(1, RoundingMode.HALF_UP).doubleValue();
         }
     }
 
     public void decrementScale() {
         if (scale > MIN_SCALE) {
-            scale = scale - SCALING_STEP;
+            scale = new BigDecimal(scale - SCALING_STEP).setScale(1, RoundingMode.HALF_UP).doubleValue();
         }
     }
 
