@@ -21,6 +21,7 @@ import model.Point;
 
 public class GraphicBuildingComponent {
     private static final String SCALE_TEXT = "Scale: ";
+    private static final int FULL_PERCENTS = 100;
 
     private GridPane gridPane;
 
@@ -57,7 +58,7 @@ public class GraphicBuildingComponent {
         initIncGraphicScaleButtonConfig();
         decGraphicScaleButton = new Button("-");
         initDecGraphicScaleButtonConfig();
-        currentGraphicScaleLabel = new Label(SCALE_TEXT + (int) (graphic.getScale() * 100)  + "%");
+        currentGraphicScaleLabel = new Label(SCALE_TEXT + (int) (graphic.getScale() * FULL_PERCENTS)  + "%");
 
         gridPane = new GridPane();
         initGridPaneConfig();
@@ -89,21 +90,36 @@ public class GraphicBuildingComponent {
         HBox scalingBox = new HBox(
                 singleScaleSegment,
                 new Separator(Orientation.VERTICAL),
-                decGraphicScaleButton, currentGraphicScaleLabel, incGraphicScaleButton,
-                new Separator(Orientation.VERTICAL),
-                createFunctionHintLine(graphic.getArrayFunColor()), new Label("Array"),
-                new Separator(Orientation.VERTICAL),
-                createFunctionHintLine(graphic.getLinearFunColor()), new Label("5x - 1")
+                decGraphicScaleButton, currentGraphicScaleLabel, incGraphicScaleButton
         );
+
+        int boxesSpacing = 5;
+
         scalingBox.setAlignment(Pos.CENTER);
-        scalingBox.setSpacing(5);
+        scalingBox.setSpacing(boxesSpacing);
+
+        HBox funDefBox = new HBox();
+
+        for (int funIter = 0; funIter < graphic.getFunctions().size(); funIter++) {
+            funDefBox.getChildren().addAll(
+                    createFunctionHintLine(graphic.getColors().get(funIter)),
+                    new Label(graphic.getFunctions().get(funIter).getDefinition())
+            );
+        }
+
+        funDefBox.setAlignment(Pos.CENTER);
+        funDefBox.setSpacing(boxesSpacing);
+
+        HBox unitedBox = new HBox(scalingBox, new Separator(Orientation.VERTICAL), funDefBox);
+        unitedBox.setAlignment(Pos.CENTER);
+        unitedBox.setSpacing(boxesSpacing);
 
         VBox graphicsPanel = new VBox(
                 graphic.getScrollPane(),
-                scalingBox
+                unitedBox
         );
         graphicsPanel.setAlignment(Pos.CENTER);
-        graphicsPanel.setSpacing(5);
+        graphicsPanel.setSpacing(boxesSpacing);
 
         gridPane.add(controlPanel, 0, 0);
         gridPane.add(graphicsPanel, 1,0);
@@ -167,7 +183,7 @@ public class GraphicBuildingComponent {
     private void initIncGraphicScaleButtonConfig() {
         incGraphicScaleButton.setOnAction(e -> {
             controller.incrementGraphicScale();
-            currentGraphicScaleLabel.setText(SCALE_TEXT + (int) (graphic.getScale() * 100) + "%");
+            currentGraphicScaleLabel.setText(SCALE_TEXT + (int) (graphic.getScale() * FULL_PERCENTS) + "%");
             singleScaleSegment.setText("Single seg.: " + (int) graphic.getSingleScaleSegment());
         });
     }
@@ -175,7 +191,7 @@ public class GraphicBuildingComponent {
     private void initDecGraphicScaleButtonConfig() {
         decGraphicScaleButton.setOnAction(e -> {
             controller.decrementGraphicScale();
-            currentGraphicScaleLabel.setText(SCALE_TEXT + (int) (graphic.getScale() * 100) + "%");
+            currentGraphicScaleLabel.setText(SCALE_TEXT + (int) (graphic.getScale() * FULL_PERCENTS) + "%");
             singleScaleSegment.setText("Single seg.: " + (int) graphic.getSingleScaleSegment());
         });
     }

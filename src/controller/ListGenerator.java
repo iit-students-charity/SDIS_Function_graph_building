@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 
 import java.util.Random;
 
+
 public class ListGenerator {
     public static ObservableList<Double> generate(int sizeOfList) {
         ObservableList<Double> resultList = FXCollections.observableArrayList();

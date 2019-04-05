@@ -13,6 +13,8 @@ import model.Point;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Random;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 public class GraphicCanvas {
@@ -35,6 +37,8 @@ public class GraphicCanvas {
     private ObservableList<Point> prevPoints;
     private ObservableList<Color> colors;
     private ObservableList<Integer> functionPointsIterators;
+
+    private Lock lock;
 
 
     public GraphicCanvas(ObservableList<Function> functions) {
@@ -63,6 +67,8 @@ public class GraphicCanvas {
             colors.add(Color.color(forColors.nextDouble(), forColors.nextDouble(), forColors.nextDouble()));
             functionPointsIterators.add(0);
         }
+
+        lock = new ReentrantLock();
     }
 
     public ScrollPane getScrollPane() {
@@ -79,6 +85,14 @@ public class GraphicCanvas {
 
     public Color getLinearFunColor() {
         return colors.get(1);
+    }
+
+    public ObservableList<Color> getColors() {
+        return colors;
+    }
+
+    public ObservableList<Function> getFunctions() {
+        return functions;
     }
 
 
@@ -212,14 +226,24 @@ public class GraphicCanvas {
     }
 
     public void incrementScale() {
-        if (scale < MAX_SCALE) {
-            scale = new BigDecimal(scale + SCALING_STEP).setScale(1, RoundingMode.HALF_UP).doubleValue();
+        lock.lock();
+        try {
+            if (scale < MAX_SCALE) {
+                scale = new BigDecimal(scale + SCALING_STEP).setScale(1, RoundingMode.HALF_UP).doubleValue();
+            }
+        } finally {
+            lock.unlock();
         }
     }
 
     public void decrementScale() {
-        if (scale > MIN_SCALE) {
-            scale = new BigDecimal(scale - SCALING_STEP).setScale(1, RoundingMode.HALF_UP).doubleValue();
+        lock.lock();
+        try {
+            if (scale > MIN_SCALE) {
+                scale = new BigDecimal(scale - SCALING_STEP).setScale(1, RoundingMode.HALF_UP).doubleValue();
+            }
+        } finally {
+            lock.unlock();
         }
     }
 

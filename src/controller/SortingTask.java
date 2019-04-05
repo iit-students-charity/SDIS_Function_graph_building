@@ -5,8 +5,6 @@ import model.Function;
 import model.Point;
 import model.Tree;
 
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class SortingTask implements Runnable {
     private final Function arrayFunction;
@@ -18,23 +16,21 @@ public class SortingTask implements Runnable {
         this.numberOfLists = numberOfLists;
     }
 
+
     @Override
     public void run() {
-        double mega = 1000;
+        double mega = 1000; // for result in microseconds
         int sleepTime = 70;
 
         for (int arrSize = (int) arrayFunction.getXDownLimit(); arrSize <= arrayFunction.getXUpLimit(); arrSize++) {
             double summarySortingTime = 0;
 
             for (int numbOfArrayToCheck = 0; numbOfArrayToCheck < numberOfLists; numbOfArrayToCheck++) {
-                double startTime = System.nanoTime();
-                sort(ListGenerator.generate(arrSize));
-                summarySortingTime += System.nanoTime() - startTime;
+                summarySortingTime += sort(ListGenerator.generate(arrSize));
             }
             double averageSortingTime = (summarySortingTime / numberOfLists) / mega;
 
             arrayFunction.getPoints().add(new Point(arrSize, averageSortingTime));
-            System.out.println(new Point(arrSize, averageSortingTime));
 
             try {
                 Thread.sleep(sleepTime);
@@ -47,14 +43,19 @@ public class SortingTask implements Runnable {
         Thread.currentThread().interrupt();
     }
 
-    private void sort(ObservableList<Double> doubles) {
+    private double sort(ObservableList<Double> doubles) {
+        double startSortingTime = System.nanoTime();
         Tree tree = new Tree(doubles.get(0));
 
         for (int doublesIter = 1; doublesIter < doubles.size(); doublesIter++) {
             tree.insert(new Tree(doubles.get(doublesIter)));
         }
 
+        double endSortingTime = System.nanoTime() - startSortingTime;
+
         doubles.clear();
         doubles.addAll(tree.toList());
+
+        return endSortingTime;
     }
 }

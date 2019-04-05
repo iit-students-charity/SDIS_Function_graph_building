@@ -10,6 +10,9 @@ public class Controller {private Function arrayFunction;
     private Thread arrayFunCalcThread;
     private Thread linFunCalcThread;
 
+    private boolean isTCalcThreadsAlive;
+
+
     public Controller(Function arrayFunction, Function linearFunction, GraphicCanvas graphic) {
         this.arrayFunction = arrayFunction;
         this.linearFunction = linearFunction;
@@ -21,10 +24,12 @@ public class Controller {private Function arrayFunction;
         drawThread.setName("draw");
         drawThread.setDaemon(true);
         drawThread.start();
+
+        isTCalcThreadsAlive = false;
     }
 
     public void startGraphicBuilding(int numberOfLists) {
-        if (!arrayFunCalcThread.isAlive() || arrayFunCalcThread.isInterrupted()) {
+        if (!isTCalcThreadsAlive) {
             arrayFunction.getPoints().clear();
             linearFunction.getPoints().clear();
             graphicCanvas.eraseCanvas();
@@ -37,6 +42,8 @@ public class Controller {private Function arrayFunction;
 
             arrayFunCalcThread.start();
             linFunCalcThread.start();
+
+            isTCalcThreadsAlive = true;
         }
     }
 
@@ -49,9 +56,10 @@ public class Controller {private Function arrayFunction;
     }
 
     public void stopGraphicBuilding() {
-        if (!arrayFunCalcThread.isInterrupted()) {
+        if (isTCalcThreadsAlive) {
             arrayFunCalcThread.interrupt();
             linFunCalcThread.interrupt();
+            isTCalcThreadsAlive = false;
         }
     }
 }

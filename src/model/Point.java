@@ -1,5 +1,6 @@
 package model;
 
+
 public class Point {
     private double x;
     private double y;
@@ -17,7 +18,6 @@ public class Point {
     public double getY() {
         return y;
     }
-
 
     @Override
     public String toString() {

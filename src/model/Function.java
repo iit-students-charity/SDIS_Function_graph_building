@@ -3,9 +3,12 @@ package model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+
 public class Function {
     public static final double MIN_X_DOWN_LIMIT = -5000;
     public static final double MAX_X_UP_LIMIT = 5000;
+
+    private String definition;
 
     private double xDownLimit;
     private double xUpLimit;
@@ -13,7 +16,9 @@ public class Function {
     private ObservableList<Point> points;
 
 
-    public Function(double xDownLimit, double xUpLimit) {
+    public Function(String definition, double xDownLimit, double xUpLimit) {
+        this.definition = definition;
+
         this.xDownLimit = xDownLimit;
         this.xUpLimit = xUpLimit;
 
@@ -21,7 +26,15 @@ public class Function {
     }
 
     public Function() {
-        this(MIN_X_DOWN_LIMIT, MAX_X_UP_LIMIT);
+        this("", MIN_X_DOWN_LIMIT, MAX_X_UP_LIMIT);
+    }
+
+    public Function(String definition) {
+        this(definition, MIN_X_DOWN_LIMIT, MAX_X_UP_LIMIT);
+    }
+
+    public String getDefinition() {
+        return definition;
     }
 
     public double getXUpLimit() {

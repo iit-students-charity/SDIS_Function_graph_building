@@ -6,11 +6,13 @@ import javafx.scene.Node;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 
+
 public class TwoNodesGrid {
     private Node leftNode;
     private Node rightNode;
 
     private GridPane gridPane;
+
 
     public TwoNodesGrid(Node leftNode, Node rightNode) {
         this.leftNode = leftNode;

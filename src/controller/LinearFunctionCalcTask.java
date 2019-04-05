@@ -21,7 +21,6 @@ public class LinearFunctionCalcTask implements Runnable {
 
         for (double x = linearFunction.getXDownLimit(); x <= linearFunction.getXUpLimit(); x += step) {
             linearFunction.getPoints().add(new Point(x, a*x + b));
-            //System.out.println(new Point(x, a*x + b));
 
             try {
                 Thread.sleep(sleepTime);

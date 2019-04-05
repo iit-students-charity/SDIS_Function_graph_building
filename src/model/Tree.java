@@ -3,6 +3,7 @@ package model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+
 public class Tree {
     private Tree left;
     private Tree right;
