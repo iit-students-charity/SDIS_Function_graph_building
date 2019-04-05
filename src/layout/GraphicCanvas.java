@@ -40,6 +40,12 @@ public class GraphicCanvas {
     private Color arrayFunColor;
     private Color linearFunColor;
 
+    private ObservableList<Function> functions;
+    private ObservableList<Point> prevPoints;
+    private ObservableList<Color> colors;
+    private ObservableList<Integer> functionIterators;
+
+
 
     public GraphicCanvas(Function arrayFunction, Function linearFunction) {
         scale = MIN_SCALE;
@@ -61,6 +67,8 @@ public class GraphicCanvas {
         linearFunPointsIter = 0;
         arrayFunColor = Color.GREEN;
         linearFunColor = Color.RED;
+
+        functions = FXCollections.observableArrayList();
     }
 
     public ScrollPane getScrollPane() {
@@ -158,6 +166,29 @@ public class GraphicCanvas {
 
             linearFunPrevPoint = nextPoint;
             linearFunPointsIter++;
+        }
+
+        for (int funIter = 0; funIter < functions.size(); funIter++) {
+            graphic.setStroke(colors.get(funIter));
+
+            nextPoint = new Point(
+                    functions.get(funIter).getPoints().get(functionIterators.get(funIter)).getX() *
+                            scale + halfCanvasSize,
+                    functions.get(funIter).getPoints().get(functionIterators.get(funIter)).getX() *
+                            scale + halfCanvasSize
+            );
+
+            if (prevPoints.get(funIter) == null) {
+                prevPoints.set(funIter, nextPoint);
+            }
+
+            graphic.strokeLine(
+                    prevPoints.get(funIter).getX(), prevPoints.get(funIter).getY(),
+                    nextPoint.getX(), nextPoint.getY()
+            );
+
+            prevPoints.set(funIter, nextPoint);
+            functionIterators.set(funIter, functionIterators.get(funIter));
         }
     }
 

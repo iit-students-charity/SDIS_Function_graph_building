@@ -25,11 +25,11 @@ public class SortingTask implements Runnable {
 
         Lock lock = new ReentrantLock();
 
-        for (int i = (int) arrayFunction.getXDownLimit(); i <= arrayFunction.getXUpLimit(); i++) {
+        for (int arrSize = (int) arrayFunction.getXDownLimit(); arrSize <= arrayFunction.getXUpLimit(); arrSize++) {
             double summarySortingTime = 0;
 
-            for (int j = 0; j < numberOfLists; j++) {
-                ObservableList<Double> doubles = ListGenerator.generate(i);
+            for (int numbOfArrayToCheck = 0; numbOfArrayToCheck < numberOfLists; numbOfArrayToCheck++) {
+                ObservableList<Double> doubles = ListGenerator.generate(arrSize);
 
                 double startTime = System.nanoTime();
                 sort(doubles);
@@ -40,7 +40,7 @@ public class SortingTask implements Runnable {
             lock.lock();
 
             try {
-                arrayFunction.getPoints().add(new Point(i, averageSortingTime));
+                arrayFunction.getPoints().add(new Point(arrSize, averageSortingTime));
 
                 try {
                     Thread.sleep(sleepTime);

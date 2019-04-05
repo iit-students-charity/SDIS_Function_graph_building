@@ -2,6 +2,8 @@ package sample;
 
 import controller.Controller;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import layout.GraphicBuildingComponent;
@@ -20,6 +22,9 @@ public class Main extends Application {
         Function arrayFunction = new Function();
         arrayFunction.setXDownLimit(arrayFunctionXDownLimit);
         Function linearFunction = new Function();
+
+        ObservableList<Function> functions = FXCollections.observableArrayList();
+        functions.addAll(arrayFunction, linearFunction);
 
         GraphicCanvas graphic = new GraphicCanvas(arrayFunction, linearFunction);
         Controller controller = new Controller(arrayFunction, linearFunction, graphic);
