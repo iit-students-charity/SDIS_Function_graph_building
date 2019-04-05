@@ -27,7 +27,7 @@ public class Controller {private Function arrayFunction;
         if (!arrayFunCalcThread.isAlive() || arrayFunCalcThread.isInterrupted()) {
             arrayFunction.getPoints().clear();
             linearFunction.getPoints().clear();
-            graphicCanvas.eraseFunctionGraphics();
+            graphicCanvas.eraseCanvas();
 
             arrayFunCalcThread = new Thread(new SortingTask(arrayFunction, numberOfLists));
             linFunCalcThread = new Thread(new LinearFunctionCalcTask(linearFunction));

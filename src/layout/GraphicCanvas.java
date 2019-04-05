@@ -9,10 +9,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import model.Function;
 import model.Point;
-import sample.Main;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Random;
 
 
 public class GraphicCanvas {
@@ -27,27 +27,17 @@ public class GraphicCanvas {
     private double canvasSize;
     private boolean hasToClear;
 
-    private Canvas canvas;
     private ScrollPane scrollPane;
+    private Canvas canvas;
     private GraphicsContext graphic;
-
-    private ObservableList<Point> arrayFunPoints;
-    private ObservableList<Point> linearFunPoints;
-    private int arrayFunPointsIter;
-    private int linearFunPointsIter;
-    private Point arrayFunPrevPoint;
-    private Point linearFunPrevPoint;
-    private Color arrayFunColor;
-    private Color linearFunColor;
 
     private ObservableList<Function> functions;
     private ObservableList<Point> prevPoints;
     private ObservableList<Color> colors;
-    private ObservableList<Integer> functionIterators;
+    private ObservableList<Integer> functionPointsIterators;
 
 
-
-    public GraphicCanvas(Function arrayFunction, Function linearFunction) {
+    public GraphicCanvas(ObservableList<Function> functions) {
         scale = MIN_SCALE;
         prevScale = scale;
         hasToClear = false;
@@ -56,19 +46,23 @@ public class GraphicCanvas {
         updateCanvasConfig();
 
         graphic = canvas.getGraphicsContext2D();
-        eraseFunctionGraphics();
+        eraseCanvas();
 
         scrollPane = new ScrollPane();
         initScrollPaneConfig();
 
-        arrayFunPoints = arrayFunction.getPoints();
-        linearFunPoints = linearFunction.getPoints();
-        arrayFunPointsIter = 0;
-        linearFunPointsIter = 0;
-        arrayFunColor = Color.GREEN;
-        linearFunColor = Color.RED;
+        this.functions = functions;
+        prevPoints = FXCollections.observableArrayList();
+        colors = FXCollections.observableArrayList();
+        functionPointsIterators = FXCollections.observableArrayList();
+        Random forColors = new Random(System.currentTimeMillis());
 
-        functions = FXCollections.observableArrayList();
+
+        for (int funIter = 0; funIter < functions.size(); funIter++) {
+            prevPoints.add(null);
+            colors.add(Color.color(forColors.nextDouble(), forColors.nextDouble(), forColors.nextDouble()));
+            functionPointsIterators.add(0);
+        }
     }
 
     public ScrollPane getScrollPane() {
@@ -80,11 +74,11 @@ public class GraphicCanvas {
     }
 
     public Color getArrayFunColor() {
-        return arrayFunColor;
+        return colors.get(0);
     }
 
     public Color getLinearFunColor() {
-        return linearFunColor;
+        return colors.get(1);
     }
 
 
@@ -112,7 +106,7 @@ public class GraphicCanvas {
 
         if (scale != prevScale) {
             updateCanvasConfig();
-            eraseFunctionGraphics();
+            eraseCanvas();
 
             scrollPane.setVvalue(SCROLL_PANE_CENTER_POSITION);
             scrollPane.setHvalue(SCROLL_PANE_CENTER_POSITION);
@@ -126,69 +120,33 @@ public class GraphicCanvas {
 
         Point nextPoint;
 
-        if (arrayFunPointsIter < arrayFunPoints.size()) {
-            graphic.setStroke(arrayFunColor);
-
-            nextPoint = new Point(
-                    arrayFunPoints.get(arrayFunPointsIter).getX() * scale + halfCanvasSize,
-                    -arrayFunPoints.get(arrayFunPointsIter).getY() * scale + halfCanvasSize
-            );
-
-            if (arrayFunPrevPoint == null) {
-                arrayFunPrevPoint = nextPoint;
-            }
-
-            graphic.strokeLine(
-                    arrayFunPrevPoint.getX(), arrayFunPrevPoint.getY(),
-                    nextPoint.getX(), nextPoint.getY()
-            );
-
-            arrayFunPrevPoint = nextPoint;
-            arrayFunPointsIter++;
-        }
-
-        if (linearFunPointsIter < linearFunPoints.size()) {
-            graphic.setStroke(linearFunColor);
-
-            nextPoint = new Point(
-                    linearFunPoints.get(linearFunPointsIter).getX() * scale + halfCanvasSize,
-                    -linearFunPoints.get(linearFunPointsIter).getY() * scale + halfCanvasSize
-            );
-
-            if (linearFunPrevPoint == null) {
-                linearFunPrevPoint = nextPoint;
-            }
-
-            graphic.strokeLine(
-                    linearFunPrevPoint.getX(), linearFunPrevPoint.getY(),
-                    nextPoint.getX(), nextPoint.getY()
-            );
-
-            linearFunPrevPoint = nextPoint;
-            linearFunPointsIter++;
-        }
-
         for (int funIter = 0; funIter < functions.size(); funIter++) {
-            graphic.setStroke(colors.get(funIter));
+            if (functionPointsIterators.get(funIter) < functions.get(funIter).getPoints().size()) {
+                graphic.setStroke(colors.get(funIter));
 
-            nextPoint = new Point(
-                    functions.get(funIter).getPoints().get(functionIterators.get(funIter)).getX() *
-                            scale + halfCanvasSize,
-                    functions.get(funIter).getPoints().get(functionIterators.get(funIter)).getX() *
-                            scale + halfCanvasSize
-            );
+                try {
+                    nextPoint = new Point(
+                            functions.get(funIter).getPoints().get(functionPointsIterators.get(funIter)).getX() *
+                                    scale + halfCanvasSize,
+                            -functions.get(funIter).getPoints().get(functionPointsIterators.get(funIter)).getY() *
+                                    scale + halfCanvasSize
+                    );
+                } catch (IndexOutOfBoundsException ex) {
+                    continue;
+                }
 
-            if (prevPoints.get(funIter) == null) {
+                if (prevPoints.get(funIter) == null) {
+                    prevPoints.set(funIter, nextPoint);
+                }
+
+                graphic.strokeLine(
+                        prevPoints.get(funIter).getX(), prevPoints.get(funIter).getY(),
+                        nextPoint.getX(), nextPoint.getY()
+                );
+
                 prevPoints.set(funIter, nextPoint);
+                functionPointsIterators.set(funIter, functionPointsIterators.get(funIter) + 1);
             }
-
-            graphic.strokeLine(
-                    prevPoints.get(funIter).getX(), prevPoints.get(funIter).getY(),
-                    nextPoint.getX(), nextPoint.getY()
-            );
-
-            prevPoints.set(funIter, nextPoint);
-            functionIterators.set(funIter, functionIterators.get(funIter));
         }
     }
 
@@ -265,23 +223,24 @@ public class GraphicCanvas {
         }
     }
 
-    public double getSingleScaleSegment() {
-        return MARK_SPACING / scale;
-    }
-
-    public void eraseFunctionGraphics() {
+    public void eraseCanvas() {
         hasToClear = true;
     }
 
     private void clear() {
-        arrayFunPointsIter = 0;
-        linearFunPointsIter = 0;
-        arrayFunPrevPoint = null;
-        linearFunPrevPoint = null;
+        for (int funIter = 0; funIter < prevPoints.size(); funIter++) {
+            prevPoints.set(funIter, null);
+            functionPointsIterators.set(funIter, 0);
+        }
 
         // To avoid axes overlaying
         graphic.setFill(Color.WHITE);
         graphic.fillRect(0,0, canvas.getWidth(), canvas.getHeight());
         updateCoordinateAxes();
+    }
+
+
+    public double getSingleScaleSegment() {
+        return MARK_SPACING / scale;
     }
 }

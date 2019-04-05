@@ -26,7 +26,7 @@ public class Main extends Application {
         ObservableList<Function> functions = FXCollections.observableArrayList();
         functions.addAll(arrayFunction, linearFunction);
 
-        GraphicCanvas graphic = new GraphicCanvas(arrayFunction, linearFunction);
+        GraphicCanvas graphic = new GraphicCanvas(functions);
         Controller controller = new Controller(arrayFunction, linearFunction, graphic);
         GraphicBuildingComponent graphicBuildingComponent = new GraphicBuildingComponent(arrayFunction, graphic, controller);
 

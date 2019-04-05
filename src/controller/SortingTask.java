@@ -20,36 +20,27 @@ public class SortingTask implements Runnable {
 
     @Override
     public void run() {
-        double mega = 100;
+        double mega = 1000;
         int sleepTime = 70;
-
-        Lock lock = new ReentrantLock();
 
         for (int arrSize = (int) arrayFunction.getXDownLimit(); arrSize <= arrayFunction.getXUpLimit(); arrSize++) {
             double summarySortingTime = 0;
 
             for (int numbOfArrayToCheck = 0; numbOfArrayToCheck < numberOfLists; numbOfArrayToCheck++) {
-                ObservableList<Double> doubles = ListGenerator.generate(arrSize);
-
                 double startTime = System.nanoTime();
-                sort(doubles);
+                sort(ListGenerator.generate(arrSize));
                 summarySortingTime += System.nanoTime() - startTime;
             }
             double averageSortingTime = (summarySortingTime / numberOfLists) / mega;
 
-            lock.lock();
+            arrayFunction.getPoints().add(new Point(arrSize, averageSortingTime));
+            System.out.println(new Point(arrSize, averageSortingTime));
 
             try {
-                arrayFunction.getPoints().add(new Point(arrSize, averageSortingTime));
-
-                try {
-                    Thread.sleep(sleepTime);
-                } catch (InterruptedException ex) {
-                    Thread.currentThread().interrupt();
-                    break;
-                }
-            } finally {
-                lock.unlock();
+                Thread.sleep(sleepTime);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+                break;
             }
         }
 
