@@ -10,13 +10,11 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import model.Function;
 import model.Point;
+import sample.Main;
 
 
 public class GraphicBuildingComponent {
@@ -111,7 +109,16 @@ public class GraphicBuildingComponent {
         funDefBox.setAlignment(Pos.CENTER);
         funDefBox.setSpacing(boxesSpacing);
 
-        HBox unitedBox = new HBox(scalingBox, new Separator(Orientation.VERTICAL), funDefBox);
+        ScrollPane funScrollPane = new ScrollPane();
+        funScrollPane.setPannable(true);
+        funScrollPane.setContent(funDefBox);
+        funScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        funScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        funScrollPane.setPrefWidth(Main.MAIN_FORM_WIDTH / 5);
+        funScrollPane.setMinHeight(4);
+        funScrollPane.setStyle("-fx-background-color:transparent;");
+
+        HBox unitedBox = new HBox(scalingBox, new Separator(Orientation.VERTICAL), funScrollPane);
         unitedBox.setAlignment(Pos.CENTER);
         unitedBox.setSpacing(boxesSpacing);
 
