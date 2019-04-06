@@ -30,7 +30,8 @@ public class Main extends Application {
 
         GraphicCanvas graphic = new GraphicCanvas(functions);
         Controller controller = new Controller(arrayFunction, linearFunction, graphic);
-        GraphicBuildingComponent graphicBuildingComponent = new GraphicBuildingComponent(arrayFunction, graphic, controller);
+        GraphicBuildingComponent graphicBuildingComponent =
+                new GraphicBuildingComponent(arrayFunction, graphic, controller);
 
         primaryStage.setResizable(false);
         primaryStage.setTitle(mainFormTitle);

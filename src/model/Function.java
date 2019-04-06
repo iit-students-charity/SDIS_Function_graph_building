@@ -5,8 +5,8 @@ import javafx.collections.ObservableList;
 
 
 public class Function {
-    public static final double MIN_X_DOWN_LIMIT = -5000;
-    public static final double MAX_X_UP_LIMIT = 5000;
+    public static final double MIN_X_DOWN_LIMIT = -1000;
+    public static final double MAX_X_UP_LIMIT = 1000;
 
     private String definition;
 

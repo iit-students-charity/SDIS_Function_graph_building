@@ -19,7 +19,7 @@ public class SortingTask implements Runnable {
 
     @Override
     public void run() {
-        double mega = 1000; // for result in microseconds
+        double mega = 100;
         int sleepTime = 70;
 
         for (int arrSize = (int) arrayFunction.getXDownLimit(); arrSize <= arrayFunction.getXUpLimit(); arrSize++) {

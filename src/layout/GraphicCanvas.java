@@ -18,8 +18,8 @@ import java.util.concurrent.locks.ReentrantLock;
 
 
 public class GraphicCanvas {
-    private static final double MIN_SCALE = 0.1;
-    private static final double MAX_SCALE = 1.5;
+    private static final double MIN_SCALE = 0.6;
+    private static final double MAX_SCALE = 3.0;
     private static final double SCALING_STEP = 0.1;
     private static final double SCROLL_PANE_CENTER_POSITION = 0.5;
     private final double MARK_SPACING = 20;
@@ -75,6 +75,10 @@ public class GraphicCanvas {
         return scrollPane;
     }
 
+    public Canvas getCanvas() {
+        return canvas;
+    }
+
     public double getScale() {
         return scale;
     }
@@ -107,7 +111,7 @@ public class GraphicCanvas {
 
     // Drawing and updating
     private void updateCanvasConfig() {
-        canvasSize = (Math.max(Math.abs(Function.MIN_X_DOWN_LIMIT), Function.MAX_X_UP_LIMIT)) * scale;
+        canvasSize = (Math.max(Math.abs(Function.MIN_X_DOWN_LIMIT), Math.abs(Function.MAX_X_UP_LIMIT))) * scale;
         canvas.setWidth(canvasSize);
         canvas.setHeight(canvasSize);
     }
@@ -226,21 +230,25 @@ public class GraphicCanvas {
     }
 
     public void incrementScale() {
-        lock.lock();
+        //lock.lock();
         try {
-            if (scale < MAX_SCALE) {
-                scale = new BigDecimal(scale + SCALING_STEP).setScale(1, RoundingMode.HALF_UP).doubleValue();
+            if (lock.tryLock()) {
+                if (scale < MAX_SCALE) {
+                    scale = new BigDecimal(scale + SCALING_STEP).setScale(1, RoundingMode.HALF_UP).doubleValue();
+                }
             }
         } finally {
-            lock.unlock();
+             lock.unlock();
         }
     }
 
     public void decrementScale() {
-        lock.lock();
+        //lock.lock();
         try {
-            if (scale > MIN_SCALE) {
-                scale = new BigDecimal(scale - SCALING_STEP).setScale(1, RoundingMode.HALF_UP).doubleValue();
+            if (lock.tryLock()) {
+                if (scale > MIN_SCALE) {
+                    scale = new BigDecimal(scale - SCALING_STEP).setScale(1, RoundingMode.HALF_UP).doubleValue();
+                }
             }
         } finally {
             lock.unlock();

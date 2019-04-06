@@ -31,7 +31,7 @@ public class GraphicBuildingComponent {
     private Button startBuildButton;
     private Button stopBuildButton;
     private TableView<Point> functionTable;
-    private GraphicCanvas graphic;
+    private GraphicCanvas graphicCanvas;
 
     private Button incGraphicScaleButton;
     private Button decGraphicScaleButton;
@@ -41,8 +41,8 @@ public class GraphicBuildingComponent {
     private Controller controller;
 
 
-    public GraphicBuildingComponent(Function arrayFunction, GraphicCanvas graphic, Controller controller) {
-        singleScaleSegment = new Label("Single seg.: " + (int) graphic.getSingleScaleSegment());
+    public GraphicBuildingComponent(Function arrayFunction, GraphicCanvas graphicCanvas, Controller controller) {
+        singleScaleSegment = new Label("Single seg.: " + (int) graphicCanvas.getSingleScaleSegment());
         nTextField = new TextField();
         kTextField = new TextField();
         startBuildButton = new Button("Start");
@@ -52,13 +52,14 @@ public class GraphicBuildingComponent {
         functionTable = new TableView<>();
         initFunctionTableConfig(arrayFunction);
 
-        this.graphic = graphic;
+        this.graphicCanvas = graphicCanvas;
+        initScrollCtrlScaling();
 
         incGraphicScaleButton = new Button("+");
         initIncGraphicScaleButtonConfig();
         decGraphicScaleButton = new Button("-");
         initDecGraphicScaleButtonConfig();
-        currentGraphicScaleLabel = new Label(SCALE_TEXT + (int) (graphic.getScale() * FULL_PERCENTS)  + "%");
+        currentGraphicScaleLabel = new Label(SCALE_TEXT + (int) (graphicCanvas.getScale() * FULL_PERCENTS)  + "%");
 
         gridPane = new GridPane();
         initGridPaneConfig();
@@ -100,10 +101,10 @@ public class GraphicBuildingComponent {
 
         HBox funDefBox = new HBox();
 
-        for (int funIter = 0; funIter < graphic.getFunctions().size(); funIter++) {
+        for (int funIter = 0; funIter < graphicCanvas.getFunctions().size(); funIter++) {
             funDefBox.getChildren().addAll(
-                    createFunctionHintLine(graphic.getColors().get(funIter)),
-                    new Label(graphic.getFunctions().get(funIter).getDefinition())
+                    createFunctionHintLine(graphicCanvas.getColors().get(funIter)),
+                    new Label(graphicCanvas.getFunctions().get(funIter).getDefinition())
             );
         }
 
@@ -115,7 +116,7 @@ public class GraphicBuildingComponent {
         unitedBox.setSpacing(boxesSpacing);
 
         VBox graphicsPanel = new VBox(
-                graphic.getScrollPane(),
+                graphicCanvas.getScrollPane(),
                 unitedBox
         );
         graphicsPanel.setAlignment(Pos.CENTER);
@@ -183,16 +184,33 @@ public class GraphicBuildingComponent {
     private void initIncGraphicScaleButtonConfig() {
         incGraphicScaleButton.setOnAction(e -> {
             controller.incrementGraphicScale();
-            currentGraphicScaleLabel.setText(SCALE_TEXT + (int) (graphic.getScale() * FULL_PERCENTS) + "%");
-            singleScaleSegment.setText("Single seg.: " + (int) graphic.getSingleScaleSegment());
+            currentGraphicScaleLabel.setText(SCALE_TEXT + (int) (graphicCanvas.getScale() * FULL_PERCENTS) + "%");
+            singleScaleSegment.setText("Single seg.: " + (int) graphicCanvas.getSingleScaleSegment());
         });
     }
 
     private void initDecGraphicScaleButtonConfig() {
         decGraphicScaleButton.setOnAction(e -> {
             controller.decrementGraphicScale();
-            currentGraphicScaleLabel.setText(SCALE_TEXT + (int) (graphic.getScale() * FULL_PERCENTS) + "%");
-            singleScaleSegment.setText("Single seg.: " + (int) graphic.getSingleScaleSegment());
+            currentGraphicScaleLabel.setText(SCALE_TEXT + (int) (graphicCanvas.getScale() * FULL_PERCENTS) + "%");
+            singleScaleSegment.setText("Single seg.: " + (int) graphicCanvas.getSingleScaleSegment());
+        });
+    }
+
+    private void initScrollCtrlScaling() {
+        graphicCanvas.getCanvas().setOnScroll(e -> {
+            if (e.isControlDown()) {
+                if (e.getDeltaY() > 0) {
+                    graphicCanvas.incrementScale();
+                    currentGraphicScaleLabel.setText(SCALE_TEXT + (int) (graphicCanvas.getScale() * FULL_PERCENTS) + "%");
+                    singleScaleSegment.setText("Single seg.: " + (int) graphicCanvas.getSingleScaleSegment());
+                }
+                if (e.getDeltaY() < 0) {
+                    graphicCanvas.decrementScale();
+                    currentGraphicScaleLabel.setText(SCALE_TEXT + (int) (graphicCanvas.getScale() * FULL_PERCENTS) + "%");
+                    singleScaleSegment.setText("Single seg.: " + (int) graphicCanvas.getSingleScaleSegment());
+                }
+            }
         });
     }
 
