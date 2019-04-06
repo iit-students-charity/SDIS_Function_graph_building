@@ -28,6 +28,7 @@ public class GraphicCanvas {
     private double scale;
     private double canvasSize;
     private boolean hasToClear;
+    private double maxCoor;
 
     private ScrollPane scrollPane;
     private Canvas canvas;
@@ -45,6 +46,7 @@ public class GraphicCanvas {
         scale = MIN_SCALE;
         prevScale = scale;
         hasToClear = false;
+        maxCoor = 0;
 
         canvas = new Canvas();
         updateCanvasConfig();
@@ -164,6 +166,10 @@ public class GraphicCanvas {
 
                 prevPoints.set(funIter, nextPoint);
                 functionPointsIterators.set(funIter, functionPointsIterators.get(funIter) + 1);
+
+                maxCoor = nextPoint.getY() > nextPoint.getX() ?
+                        (nextPoint.getY() > maxCoor ? nextPoint.getY() : maxCoor) :
+                        (nextPoint.getX() > maxCoor ? nextPoint.getX() : maxCoor);
             }
         }
     }
