@@ -18,7 +18,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 
 public class GraphicCanvas {
-    private static final double MIN_SCALE = 0.6;
+    private static final double MIN_SCALE = 0.7;
     private static final double MAX_SCALE = 3.0;
     private static final double SCALING_STEP = 0.1;
     private static final double SCROLL_PANE_CENTER_POSITION = 0.5;
@@ -30,6 +30,7 @@ public class GraphicCanvas {
     private double scale;
     private double canvasSize;
     private boolean hasToClear;
+    private Point nextPoint;
     private double maxCoor;
 
     private ScrollPane scrollPane;
@@ -48,9 +49,11 @@ public class GraphicCanvas {
         scale = MIN_SCALE;
         prevScale = scale;
         hasToClear = false;
+        nextPoint = new Point(0,0);
         maxCoor = 0;
 
         canvas = new Canvas();
+        canvasSize = (MAX_CANVAS_SIZE_IN_NATIVE_SCALE / 5) * scale;
         updateCanvasConfig();
 
         graphic = canvas.getGraphicsContext2D();
@@ -107,7 +110,6 @@ public class GraphicCanvas {
 
     // Drawing and updating
     private void updateCanvasConfig() {
-        canvasSize = MAX_CANVAS_SIZE_IN_NATIVE_SCALE * scale;
         canvas.setWidth(canvasSize);
         canvas.setHeight(canvasSize);
     }
@@ -119,6 +121,7 @@ public class GraphicCanvas {
         }
 
         if (scale != prevScale) {
+            canvasSize *= scale / prevScale;
             updateCanvasConfig();
             eraseCanvas();
 
@@ -132,7 +135,24 @@ public class GraphicCanvas {
         double halfCanvasSize = canvasSize / 2;
         graphic.setLineWidth(functionLineWidth);
 
-        Point nextPoint;
+        if ((Math.abs(maxCoor) >= 0.5 * canvasSize)) {
+            lock.lock();
+            try {
+                //if (lock.tryLock()) {
+                if (canvasSize < MAX_CANVAS_SIZE_IN_NATIVE_SCALE * 2) { // to avoid bufferOverflowException
+                    canvasSize += (MAX_CANVAS_SIZE_IN_NATIVE_SCALE / 20) * scale;
+
+                    updateCanvasConfig();
+                    eraseCanvas();
+
+                    scrollPane.setVvalue(SCROLL_PANE_CENTER_POSITION);
+                    scrollPane.setHvalue(SCROLL_PANE_CENTER_POSITION);
+                }
+                //}
+            } finally {
+                lock.unlock();
+            }
+        }
 
         for (int funIter = 0; funIter < functions.size(); funIter++) {
             if (functionPointsIterators.get(funIter) < functions.get(funIter).getPoints().size()) {
@@ -140,10 +160,12 @@ public class GraphicCanvas {
 
                 try {
                     nextPoint = new Point(
-                            functions.get(funIter).getPoints().get(functionPointsIterators.get(funIter)).getX() *
-                                    scale + halfCanvasSize,
-                            -functions.get(funIter).getPoints().get(functionPointsIterators.get(funIter)).getY() *
-                                    scale + halfCanvasSize
+                            functions.get(funIter).getPoints()
+                                    .get(functionPointsIterators
+                                    .get(funIter)).getX() * scale + halfCanvasSize,
+                            -functions.get(funIter).getPoints()
+                                    .get(functionPointsIterators.get(funIter))
+                                    .getY() * scale + halfCanvasSize
                     );
                 } catch (IndexOutOfBoundsException ex) {
                     continue;
@@ -161,13 +183,14 @@ public class GraphicCanvas {
                 prevPoints.set(funIter, nextPoint);
                 functionPointsIterators.set(funIter, functionPointsIterators.get(funIter) + 1);
 
-                maxCoor = nextPoint.getY() > nextPoint.getX() ?
-                        (nextPoint.getY() > maxCoor ? nextPoint.getY() : maxCoor) :
-                        (nextPoint.getX() > maxCoor ? nextPoint.getX() : maxCoor);
+                if (nextPoint.getY() > maxCoor) {
+                    maxCoor = nextPoint.getY();
+                }
+                if (nextPoint.getX() > maxCoor) {
+                    maxCoor = nextPoint.getX();
+                }
             }
         }
-
-        System.out.println(maxCoor);
     }
 
     private void updateCoordinateAxes() {
@@ -185,11 +208,11 @@ public class GraphicCanvas {
         // 'x' axis "arrow" and "arrow"'s text
         graphic.strokeLine(canvasSize - 10, halfCanvasSize - 4, canvasSize, halfCanvasSize);
         graphic.strokeLine(canvasSize - 10, halfCanvasSize + 4, canvasSize, halfCanvasSize);
-        graphic.strokeText("x", canvasSize - 10, halfCanvasSize + 15);
+        graphic.strokeText("x", canvasSize - 10, halfCanvasSize - 10);
         // 'y' axis "arrow" and "arrow"'s text
         graphic.strokeLine(halfCanvasSize - 4,10, halfCanvasSize, 0);
         graphic.strokeLine(halfCanvasSize + 4,10, halfCanvasSize, 0);
-        graphic.strokeText("y", halfCanvasSize + 10, 10);
+        graphic.strokeText("y", halfCanvasSize - 15, 10);
 
 
         double coorMarkHalfLength = 5;
