@@ -22,6 +22,8 @@ public class GraphicCanvas {
     private static final double MAX_SCALE = 3.0;
     private static final double SCALING_STEP = 0.1;
     private static final double SCROLL_PANE_CENTER_POSITION = 0.5;
+    private static final double MAX_CANVAS_SIZE_IN_NATIVE_SCALE =
+            2 * (Math.max(Math.abs(Function.MIN_X_DOWN_LIMIT), Math.abs(Function.MAX_X_UP_LIMIT)));
     private final double MARK_SPACING = 20;
 
     private double prevScale;
@@ -85,14 +87,6 @@ public class GraphicCanvas {
         return scale;
     }
 
-    public Color getArrayFunColor() {
-        return colors.get(0);
-    }
-
-    public Color getLinearFunColor() {
-        return colors.get(1);
-    }
-
     public ObservableList<Color> getColors() {
         return colors;
     }
@@ -113,7 +107,7 @@ public class GraphicCanvas {
 
     // Drawing and updating
     private void updateCanvasConfig() {
-        canvasSize = (Math.max(Math.abs(Function.MIN_X_DOWN_LIMIT), Math.abs(Function.MAX_X_UP_LIMIT))) * scale;
+        canvasSize = MAX_CANVAS_SIZE_IN_NATIVE_SCALE * scale;
         canvas.setWidth(canvasSize);
         canvas.setHeight(canvasSize);
     }
@@ -172,11 +166,13 @@ public class GraphicCanvas {
                         (nextPoint.getX() > maxCoor ? nextPoint.getX() : maxCoor);
             }
         }
+
+        System.out.println(maxCoor);
     }
 
     private void updateCoordinateAxes() {
         double markLineWidth = 0.5;
-        double markTextSize = 8;
+        double markTextSize = 9;
 
         graphic.setStroke(Color.GRAY);
         graphic.setLineWidth(markLineWidth);
@@ -186,11 +182,20 @@ public class GraphicCanvas {
 
         graphic.strokeLine(halfCanvasSize, 0, halfCanvasSize, canvasSize); // 'y' axis base
         graphic.strokeLine(0, halfCanvasSize, canvasSize, halfCanvasSize); // 'x' axis base
+        // 'x' axis "arrow" and "arrow"'s text
+        graphic.strokeLine(canvasSize - 10, halfCanvasSize - 4, canvasSize, halfCanvasSize);
+        graphic.strokeLine(canvasSize - 10, halfCanvasSize + 4, canvasSize, halfCanvasSize);
+        graphic.strokeText("x", canvasSize - 10, halfCanvasSize + 15);
+        // 'y' axis "arrow" and "arrow"'s text
+        graphic.strokeLine(halfCanvasSize - 4,10, halfCanvasSize, 0);
+        graphic.strokeLine(halfCanvasSize + 4,10, halfCanvasSize, 0);
+        graphic.strokeText("y", halfCanvasSize + 10, 10);
+
 
         double coorMarkHalfLength = 5;
         int whereToWriteMarkText = 2;
 
-        for (double eachCoorMark = 0; eachCoorMark <= canvasSize / 2; eachCoorMark += MARK_SPACING) {
+        for (double eachCoorMark = 0; eachCoorMark < canvasSize / 2; eachCoorMark += MARK_SPACING) {
             if (eachCoorMark == 0) {
                 continue;
             }

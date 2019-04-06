@@ -24,6 +24,7 @@ public class Main extends Application {
         Function arrayFunction = new Function("Array");
         arrayFunction.setXDownLimit(arrayFunctionXDownLimit);
         Function linearFunction = new Function("5x - 1");
+        linearFunction.setXDownLimit(-100);
 
         ObservableList<Function> functions = FXCollections.observableArrayList();
         functions.addAll(arrayFunction, linearFunction);

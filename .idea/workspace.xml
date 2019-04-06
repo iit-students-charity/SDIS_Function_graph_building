@@ -2,7 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/src/layout/GraphicBuildingComponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/layout/GraphicBuildingComponent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/SDIS_Function_graph_building/layout/GraphicCanvas.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SDIS_Function_graph_building/layout/GraphicCanvas.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layout/GraphicCanvas.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/layout/GraphicCanvas.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/Main.java" afterDir="false" />
     </list>
     <ignored path="JavaFxApplication.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -64,7 +67,7 @@
         <entry file="file://$PROJECT_DIR$/src/controller/LinearFunctionCalcTask.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="272">
-              <caret line="18" column="23" selection-start-line="18" selection-start-column="23" selection-end-line="18" selection-end-column="23" />
+              <caret line="19" column="27" selection-start-line="19" selection-start-column="27" selection-end-line="19" selection-end-column="27" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -93,8 +96,8 @@
       <file leaf-file-name="Controller.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/controller/Controller.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="445">
-              <caret line="48" lean-forward="true" selection-start-line="48" selection-end-line="48" />
+            <state relative-caret-position="799">
+              <caret line="48" selection-start-line="48" selection-end-line="48" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="method#stopGraphicBuilding#0;class#Controller#0" />
@@ -106,14 +109,10 @@
       <file leaf-file-name="Function.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/model/Function.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="8" column="49" selection-start-line="8" selection-start-column="49" selection-end-line="8" selection-end-column="49" />
+            <state relative-caret-position="408">
+              <caret line="24" column="53" lean-forward="true" selection-start-line="24" selection-start-column="53" selection-end-line="24" selection-end-column="53" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#658#659#0" expanded="true" />
-                <element signature="e#714#715#0" expanded="true" />
-                <element signature="e#762#763#0" expanded="true" />
-                <element signature="e#781#782#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -122,24 +121,20 @@
       <file leaf-file-name="Main.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/sample/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="374">
-              <caret line="30" column="50" selection-start-line="30" selection-start-column="50" selection-end-line="30" selection-end-column="50" />
+            <state relative-caret-position="306">
+              <caret line="26" column="43" lean-forward="true" selection-start-line="26" selection-start-column="43" selection-end-line="26" selection-end-column="43" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GraphicCanvas.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="GraphicCanvas.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/layout/GraphicCanvas.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="273">
-              <caret line="128" column="26" lean-forward="true" selection-start-line="128" selection-start-column="26" selection-end-line="128" selection-end-column="26" />
+            <state relative-caret-position="425">
+              <caret line="191" column="57" lean-forward="true" selection-start-line="191" selection-start-column="57" selection-end-line="191" selection-end-column="57" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="method#updateCoordinateAxes#0;class#GraphicCanvas#0" />
-                <element signature="e#8907#8908#0" expanded="true" />
-                <element signature="e#8940#8941#0" expanded="true" />
-                <element signature="e#9375#9376#0" expanded="true" />
-                <element signature="e#9418#9419#0" expanded="true" />
+                <element signature="method#clear#0;class#GraphicCanvas#0" />
               </folding>
             </state>
           </provider>
@@ -148,7 +143,7 @@
       <file leaf-file-name="Thread.java" pinned="false" current-in-tab="false">
         <entry file="jar://C:/Program Files/Java/jdk1.8.0_191/src.zip!/java/lang/Thread.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="604">
+            <state relative-caret-position="11764">
               <caret line="747" selection-start-line="747" selection-end-line="747" />
             </state>
           </provider>
@@ -157,8 +152,8 @@
       <file leaf-file-name="SortingTask.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/controller/SortingTask.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="343">
-              <caret line="48" lean-forward="true" selection-start-line="48" selection-end-line="48" />
+            <state relative-caret-position="374">
+              <caret line="25" column="42" selection-start-line="25" selection-start-column="42" selection-end-line="25" selection-end-column="42" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -166,13 +161,15 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GraphicBuildingComponent.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="GraphicBuildingComponent.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/layout/GraphicBuildingComponent.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="415">
-              <caret line="137" column="68" selection-start-line="137" selection-start-column="68" selection-end-line="137" selection-end-column="68" />
+            <state relative-caret-position="383">
+              <caret line="41" selection-start-line="41" selection-end-line="41" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="method#GraphicBuildingComponent#0;class#GraphicBuildingComponent#0" />
+                <element signature="method#initGridPaneConfig#0;class#GraphicBuildingComponent#0" />
                 <element signature="method#initStartButtonConfig#0;class#GraphicBuildingComponent#0" />
                 <element signature="method#initStopButtonConfig#0;class#GraphicBuildingComponent#0" />
                 <element signature="method#initFunctionTableConfig#0;class#GraphicBuildingComponent#0" />
@@ -244,12 +241,12 @@
         <option value="$PROJECT_DIR$/src/layout/TwoNodesGrid.java" />
         <option value="$PROJECT_DIR$/src/controller/ListGenerator.java" />
         <option value="$PROJECT_DIR$/src/controller/Controller.java" />
-        <option value="$PROJECT_DIR$/src/sample/Main.java" />
         <option value="$PROJECT_DIR$/src/model/Function.java" />
         <option value="$PROJECT_DIR$/src/controller/LinearFunctionCalcTask.java" />
-        <option value="$PROJECT_DIR$/src/controller/SortingTask.java" />
-        <option value="$PROJECT_DIR$/src/layout/GraphicCanvas.java" />
         <option value="$PROJECT_DIR$/src/layout/GraphicBuildingComponent.java" />
+        <option value="$PROJECT_DIR$/src/controller/SortingTask.java" />
+        <option value="$PROJECT_DIR$/src/sample/Main.java" />
+        <option value="$PROJECT_DIR$/src/layout/GraphicCanvas.java" />
       </list>
     </option>
   </component>
@@ -279,6 +276,8 @@
     </navigator>
     <panes>
       <pane id="PackagesPane" />
+      <pane id="AndroidView" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -319,8 +318,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="AndroidView" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -460,12 +457,13 @@
       <workItem from="1554456680761" duration="2034000" />
       <workItem from="1554461122408" duration="2866000" />
       <workItem from="1554472572790" duration="3567000" />
-      <workItem from="1554500124115" duration="14925000" />
+      <workItem from="1554500124115" duration="16604000" />
+      <workItem from="1554581172318" duration="2588000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="181352000" />
+    <option name="totallyTimeSpent" value="185619000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -486,6 +484,7 @@
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.6703755" visible="true" weight="0.20729166" />
+      <window_info anchor="bottom" id="Statistic" weight="0.22635494" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -532,10 +531,14 @@
           <caret line="96" lean-forward="true" selection-start-line="96" selection-end-line="96" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="method#GraphicBuildingComponent#0;class#GraphicBuildingComponent#0" />
+            <element signature="method#initGridPaneConfig#0;class#GraphicBuildingComponent#0" />
+            <element signature="method#initStartButtonConfig#0;class#GraphicBuildingComponent#0" />
             <element signature="method#initStopButtonConfig#0;class#GraphicBuildingComponent#0" />
             <element signature="method#initFunctionTableConfig#0;class#GraphicBuildingComponent#0" />
             <element signature="method#initIncGraphicScaleButtonConfig#0;class#GraphicBuildingComponent#0" />
             <element signature="method#initDecGraphicScaleButtonConfig#0;class#GraphicBuildingComponent#0" />
+            <element signature="method#initScrollCtrlScaling#0;class#GraphicBuildingComponent#0" />
             <element signature="method#createErrorDialog#0;class#GraphicBuildingComponent#0" />
             <element signature="method#createFunctionHintLine#0;class#GraphicBuildingComponent#0" />
           </folding>
@@ -728,17 +731,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/Main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="30" column="50" selection-start-line="30" selection-start-column="50" selection-end-line="30" selection-end-column="50" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/controller/Controller.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="445">
-          <caret line="48" lean-forward="true" selection-start-line="48" selection-end-line="48" />
+        <state relative-caret-position="799">
+          <caret line="48" selection-start-line="48" selection-end-line="48" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="method#stopGraphicBuilding#0;class#Controller#0" />
@@ -748,7 +744,7 @@
     </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_191/src.zip!/java/lang/Thread.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="604">
+        <state relative-caret-position="11764">
           <caret line="747" selection-start-line="747" selection-end-line="747" />
         </state>
       </provider>
@@ -760,16 +756,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/controller/LinearFunctionCalcTask.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="18" column="23" selection-start-line="18" selection-start-column="23" selection-end-line="18" selection-end-column="23" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/controller/DrawingTask.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
@@ -777,51 +763,51 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/controller/SortingTask.java">
+    <entry file="file://$PROJECT_DIR$/src/controller/LinearFunctionCalcTask.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="343">
-          <caret line="48" lean-forward="true" selection-start-line="48" selection-end-line="48" />
+        <state relative-caret-position="272">
+          <caret line="19" column="27" selection-start-line="19" selection-start-column="27" selection-end-line="19" selection-end-column="27" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/layout/GraphicCanvas.java">
+    <entry file="file://$PROJECT_DIR$/src/controller/SortingTask.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="273">
-          <caret line="128" column="26" lean-forward="true" selection-start-line="128" selection-start-column="26" selection-end-line="128" selection-end-column="26" />
+        <state relative-caret-position="374">
+          <caret line="25" column="42" selection-start-line="25" selection-start-column="42" selection-end-line="25" selection-end-column="42" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#updateCoordinateAxes#0;class#GraphicCanvas#0" />
-            <element signature="e#8907#8908#0" expanded="true" />
-            <element signature="e#8940#8941#0" expanded="true" />
-            <element signature="e#9375#9376#0" expanded="true" />
-            <element signature="e#9418#9419#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="26" column="43" lean-forward="true" selection-start-line="26" selection-start-column="43" selection-end-line="26" selection-end-column="43" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/model/Function.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" column="49" selection-start-line="8" selection-start-column="49" selection-end-line="8" selection-end-column="49" />
+        <state relative-caret-position="408">
+          <caret line="24" column="53" lean-forward="true" selection-start-line="24" selection-start-column="53" selection-end-line="24" selection-end-column="53" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#658#659#0" expanded="true" />
-            <element signature="e#714#715#0" expanded="true" />
-            <element signature="e#762#763#0" expanded="true" />
-            <element signature="e#781#782#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/layout/GraphicBuildingComponent.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="415">
-          <caret line="137" column="68" selection-start-line="137" selection-start-column="68" selection-end-line="137" selection-end-column="68" />
+        <state relative-caret-position="383">
+          <caret line="41" selection-start-line="41" selection-end-line="41" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="method#GraphicBuildingComponent#0;class#GraphicBuildingComponent#0" />
+            <element signature="method#initGridPaneConfig#0;class#GraphicBuildingComponent#0" />
             <element signature="method#initStartButtonConfig#0;class#GraphicBuildingComponent#0" />
             <element signature="method#initStopButtonConfig#0;class#GraphicBuildingComponent#0" />
             <element signature="method#initFunctionTableConfig#0;class#GraphicBuildingComponent#0" />
@@ -830,6 +816,17 @@
             <element signature="method#initScrollCtrlScaling#0;class#GraphicBuildingComponent#0" />
             <element signature="method#createErrorDialog#0;class#GraphicBuildingComponent#0" />
             <element signature="method#createFunctionHintLine#0;class#GraphicBuildingComponent#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/layout/GraphicCanvas.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="425">
+          <caret line="191" column="57" lean-forward="true" selection-start-line="191" selection-start-column="57" selection-end-line="191" selection-end-column="57" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#clear#0;class#GraphicCanvas#0" />
           </folding>
         </state>
       </provider>
