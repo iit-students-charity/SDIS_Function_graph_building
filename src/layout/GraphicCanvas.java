@@ -34,7 +34,8 @@ public class GraphicCanvas {
     private double canvasSize;
     private boolean hasToClear;
     private Point nextPoint;
-    private double maxCoor;
+    private double maxX;
+    private double minY;
 
     private ScrollPane scrollPane;
     private Canvas canvas;
@@ -53,7 +54,8 @@ public class GraphicCanvas {
         prevScale = scale;
         hasToClear = false;
         nextPoint = new Point(0,0);
-        maxCoor = 0;
+        maxX = Function.MIN_X_DOWN_LIMIT;
+        minY = Function.MAX_X_UP_LIMIT;
 
         canvas = new Canvas();
         canvasSize = (MAX_CANVAS_SIZE_IN_NATIVE_SCALE / 5) * scale;
@@ -134,11 +136,11 @@ public class GraphicCanvas {
             prevScale = scale;
         }
 
-        if (maxCoor >= (canvasSize - canvasSize / 7) * scale) {
+        if ((maxX >= 0.85 * canvasSize) || (minY <= 0.15 * canvasSize)) {
             lock.lock();
             try {
                 if (canvasSize < MAX_CANVAS_SIZE) { // to avoid bufferOverflowException
-                    canvasSize += canvasSize * scale;
+                    canvasSize += 0.15 * canvasSize * scale;
 
                     updateCanvasConfig();
                     eraseCanvas();
@@ -185,11 +187,11 @@ public class GraphicCanvas {
                 prevPoints.set(funIter, nextPoint);
                 functionPointsIterators.set(funIter, functionPointsIterators.get(funIter) + 1);
 
-                if (nextPoint.getY() > maxCoor) {
-                    maxCoor = nextPoint.getY();
+                if (nextPoint.getX() > maxX) {
+                    maxX = nextPoint.getX();
                 }
-                if (nextPoint.getX() > maxCoor) {
-                    maxCoor = nextPoint.getX();
+                if (nextPoint.getY() < minY) {
+                    minY = nextPoint.getY();
                 }
             }
         }
@@ -301,7 +303,8 @@ public class GraphicCanvas {
             functionPointsIterators.set(funIter, 0);
         }
 
-        maxCoor = 0;
+        maxX = Function.MIN_X_DOWN_LIMIT;
+        minY = Function.MAX_X_UP_LIMIT;
 
         // To avoid axes overlaying
         graphic.setFill(Color.WHITE);
