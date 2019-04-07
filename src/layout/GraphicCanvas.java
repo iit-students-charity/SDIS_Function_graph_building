@@ -23,7 +23,7 @@ public class GraphicCanvas {
     private static final double SCALING_STEP = 0.1;
     private static final double MAX_CANVAS_SIZE_IN_NATIVE_SCALE =
             2 * (Math.max(Math.abs(Function.MIN_X_DOWN_LIMIT), Math.abs(Function.MAX_X_UP_LIMIT)));
-    private static final double MAX_CANVAS_SIZE = 10000;
+    private static final double MAX_CANVAS_SIZE = 6000;
 
     private static final double SCROLL_PANE_CENTER_POSITION = 0.5;
     private static final int SCALING_ROUNDING = 1;
@@ -123,12 +123,22 @@ public class GraphicCanvas {
             hasToClear = false;
         }
 
-        if (maxCoor >= (canvasSize - canvasSize/ 7) * scale) {
+        if (scale != prevScale && canvasSize < MAX_CANVAS_SIZE) {
+            canvasSize *= scale / prevScale;
+            updateCanvasConfig();
+            eraseCanvas();
+
+            scrollPane.setVvalue(SCROLL_PANE_CENTER_POSITION);
+            scrollPane.setHvalue(SCROLL_PANE_CENTER_POSITION);
+
+            prevScale = scale;
+        }
+
+        if (maxCoor >= (canvasSize - canvasSize / 7) * scale) {
             lock.lock();
             try {
                 if (canvasSize < MAX_CANVAS_SIZE) { // to avoid bufferOverflowException
-                    System.out.println(1);
-                    canvasSize += (MAX_CANVAS_SIZE_IN_NATIVE_SCALE / 20) * scale;
+                    canvasSize += canvasSize * scale;
 
                     updateCanvasConfig();
                     eraseCanvas();
@@ -139,17 +149,6 @@ public class GraphicCanvas {
             } finally {
                 lock.unlock();
             }
-        }
-
-        if (scale != prevScale) {
-            canvasSize *= scale / prevScale;
-            updateCanvasConfig();
-            eraseCanvas();
-
-            scrollPane.setVvalue(SCROLL_PANE_CENTER_POSITION);
-            scrollPane.setHvalue(SCROLL_PANE_CENTER_POSITION);
-
-            prevScale = scale;
         }
 
         double functionLineWidth = 1;
@@ -221,7 +220,7 @@ public class GraphicCanvas {
         double coorMarkHalfLength = 5;
         int whereToWriteMarkText = 2;
 
-        for (double eachCoorMark = 0; eachCoorMark < canvasSize / 2; eachCoorMark += MARK_SPACING) {
+        for (double eachCoorMark = 0; eachCoorMark < canvasSize / 2 - MARK_SPACING; eachCoorMark += MARK_SPACING) {
             if (eachCoorMark == 0) {
                 continue;
             }
@@ -301,6 +300,8 @@ public class GraphicCanvas {
             prevPoints.set(funIter, null);
             functionPointsIterators.set(funIter, 0);
         }
+
+        maxCoor = 0;
 
         // To avoid axes overlaying
         graphic.setFill(Color.WHITE);
