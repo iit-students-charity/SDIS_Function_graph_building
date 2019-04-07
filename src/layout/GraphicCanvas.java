@@ -21,9 +21,12 @@ public class GraphicCanvas {
     private static final double MIN_SCALE = 0.7;
     private static final double MAX_SCALE = 3.0;
     private static final double SCALING_STEP = 0.1;
-    private static final double SCROLL_PANE_CENTER_POSITION = 0.5;
     private static final double MAX_CANVAS_SIZE_IN_NATIVE_SCALE =
             2 * (Math.max(Math.abs(Function.MIN_X_DOWN_LIMIT), Math.abs(Function.MAX_X_UP_LIMIT)));
+    private static final double MAX_CANVAS_SIZE = 10000;
+
+    private static final double SCROLL_PANE_CENTER_POSITION = 0.5;
+    private static final int SCALING_ROUNDING = 1;
     private final double MARK_SPACING = 20;
 
     private double prevScale;
@@ -120,6 +123,24 @@ public class GraphicCanvas {
             hasToClear = false;
         }
 
+        if (maxCoor >= (canvasSize - canvasSize/ 7) * scale) {
+            lock.lock();
+            try {
+                if (canvasSize < MAX_CANVAS_SIZE) { // to avoid bufferOverflowException
+                    System.out.println(1);
+                    canvasSize += (MAX_CANVAS_SIZE_IN_NATIVE_SCALE / 20) * scale;
+
+                    updateCanvasConfig();
+                    eraseCanvas();
+
+                    scrollPane.setVvalue(SCROLL_PANE_CENTER_POSITION);
+                    scrollPane.setHvalue(SCROLL_PANE_CENTER_POSITION);
+                }
+            } finally {
+                lock.unlock();
+            }
+        }
+
         if (scale != prevScale) {
             canvasSize *= scale / prevScale;
             updateCanvasConfig();
@@ -135,24 +156,6 @@ public class GraphicCanvas {
         double halfCanvasSize = canvasSize / 2;
         graphic.setLineWidth(functionLineWidth);
 
-        if ((Math.abs(maxCoor) >= 0.5 * canvasSize)) {
-            lock.lock();
-            try {
-                //if (lock.tryLock()) {
-                if (canvasSize < MAX_CANVAS_SIZE_IN_NATIVE_SCALE * 2) { // to avoid bufferOverflowException
-                    canvasSize += (MAX_CANVAS_SIZE_IN_NATIVE_SCALE / 20) * scale;
-
-                    updateCanvasConfig();
-                    eraseCanvas();
-
-                    scrollPane.setVvalue(SCROLL_PANE_CENTER_POSITION);
-                    scrollPane.setHvalue(SCROLL_PANE_CENTER_POSITION);
-                }
-                //}
-            } finally {
-                lock.unlock();
-            }
-        }
 
         for (int funIter = 0; funIter < functions.size(); funIter++) {
             if (functionPointsIterators.get(funIter) < functions.get(funIter).getPoints().size()) {
@@ -264,11 +267,11 @@ public class GraphicCanvas {
     }
 
     public void incrementScale() {
-        //lock.lock();
         try {
             if (lock.tryLock()) {
                 if (scale < MAX_SCALE) {
-                    scale = new BigDecimal(scale + SCALING_STEP).setScale(1, RoundingMode.HALF_UP).doubleValue();
+                    scale = new BigDecimal(scale + SCALING_STEP)
+                            .setScale(SCALING_ROUNDING, RoundingMode.HALF_UP).doubleValue();
                 }
             }
         } finally {
@@ -277,11 +280,11 @@ public class GraphicCanvas {
     }
 
     public void decrementScale() {
-        //lock.lock();
         try {
             if (lock.tryLock()) {
                 if (scale > MIN_SCALE) {
-                    scale = new BigDecimal(scale - SCALING_STEP).setScale(1, RoundingMode.HALF_UP).doubleValue();
+                    scale = new BigDecimal(scale - SCALING_STEP)
+                            .setScale(SCALING_ROUNDING, RoundingMode.HALF_UP).doubleValue();
                 }
             }
         } finally {
