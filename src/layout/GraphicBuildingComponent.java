@@ -57,7 +57,7 @@ public class GraphicBuildingComponent {
         initIncGraphicScaleButtonConfig();
         decGraphicScaleButton = new Button("-");
         initDecGraphicScaleButtonConfig();
-        currentGraphicScaleLabel = new Label(SCALE_TEXT + (int) (graphicCanvas.getScale() * FULL_PERCENTS)  + "%");
+        currentGraphicScaleLabel = new Label(SCALE_TEXT + (int) (graphicCanvas.getNewScale() * FULL_PERCENTS)  + "%");
 
         gridPane = new GridPane();
         initGridPaneConfig();
@@ -191,7 +191,7 @@ public class GraphicBuildingComponent {
     private void initIncGraphicScaleButtonConfig() {
         incGraphicScaleButton.setOnAction(e -> {
             controller.incrementGraphicScale();
-            currentGraphicScaleLabel.setText(SCALE_TEXT + (int) (graphicCanvas.getScale() * FULL_PERCENTS) + "%");
+            currentGraphicScaleLabel.setText(SCALE_TEXT + (int) (graphicCanvas.getCurrentScale() * FULL_PERCENTS) + "%");
             singleScaleSegment.setText("Single seg.: " + (int) graphicCanvas.getSingleScaleSegment());
         });
     }
@@ -199,7 +199,7 @@ public class GraphicBuildingComponent {
     private void initDecGraphicScaleButtonConfig() {
         decGraphicScaleButton.setOnAction(e -> {
             controller.decrementGraphicScale();
-            currentGraphicScaleLabel.setText(SCALE_TEXT + (int) (graphicCanvas.getScale() * FULL_PERCENTS) + "%");
+            currentGraphicScaleLabel.setText(SCALE_TEXT + (int) (graphicCanvas.getCurrentScale() * FULL_PERCENTS) + "%");
             singleScaleSegment.setText("Single seg.: " + (int) graphicCanvas.getSingleScaleSegment());
         });
     }
@@ -209,12 +209,12 @@ public class GraphicBuildingComponent {
             if (e.isControlDown()) {
                 if (e.getDeltaY() > 0) {
                     graphicCanvas.incrementScale();
-                    currentGraphicScaleLabel.setText(SCALE_TEXT + (int) (graphicCanvas.getScale() * FULL_PERCENTS) + "%");
+                    currentGraphicScaleLabel.setText(SCALE_TEXT + (int) (graphicCanvas.getCurrentScale() * FULL_PERCENTS) + "%");
                     singleScaleSegment.setText("Single seg.: " + (int) graphicCanvas.getSingleScaleSegment());
                 }
                 if (e.getDeltaY() < 0) {
                     graphicCanvas.decrementScale();
-                    currentGraphicScaleLabel.setText(SCALE_TEXT + (int) (graphicCanvas.getScale() * FULL_PERCENTS) + "%");
+                    currentGraphicScaleLabel.setText(SCALE_TEXT + (int) (graphicCanvas.getCurrentScale() * FULL_PERCENTS) + "%");
                     singleScaleSegment.setText("Single seg.: " + (int) graphicCanvas.getSingleScaleSegment());
                 }
             }

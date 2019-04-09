@@ -6,10 +6,12 @@ import model.Point;
 
 public class LinearFunctionCalcTask implements Runnable {
     private final Function linearFunction;
+    private final int calcTaskNumber;
 
 
-    public LinearFunctionCalcTask(Function linearFunction) {
+    public LinearFunctionCalcTask(Function linearFunction, int calcTaskNumber) {
         this.linearFunction = linearFunction;
+        this.calcTaskNumber = calcTaskNumber;
     }
 
     @Override

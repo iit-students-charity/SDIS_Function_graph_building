@@ -8,11 +8,13 @@ import model.Tree;
 
 public class SortingTask implements Runnable {
     private final Function arrayFunction;
+    private final int calcTaskNumber;
     private int numberOfLists;
 
 
-    public SortingTask(Function arrayFunction, int numberOfLists) {
+    public SortingTask(Function arrayFunction, int numberOfLists, int calcTaskNumber) {
         this.arrayFunction = arrayFunction;
+        this.calcTaskNumber = calcTaskNumber;
         this.numberOfLists = numberOfLists;
     }
 
@@ -22,13 +24,17 @@ public class SortingTask implements Runnable {
         double mega = 100;
         int sleepTime = 70;
 
-        for (int arrSize = (int) arrayFunction.getXDownLimit(); arrSize <= arrayFunction.getXUpLimit(); arrSize++) {
-            double summarySortingTime = 0;
+        double averageSortingTime;
+        double summarySortingTime;
+        double upLimit = arrayFunction.getXUpLimit();
+
+        for (int arrSize = (int) arrayFunction.getXDownLimit(); arrSize <= upLimit; arrSize++) {
+            summarySortingTime = 0;
 
             for (int numbOfArrayToCheck = 0; numbOfArrayToCheck < numberOfLists; numbOfArrayToCheck++) {
                 summarySortingTime += sort(ListGenerator.generate(arrSize));
             }
-            double averageSortingTime = (summarySortingTime / numberOfLists) / mega;
+            averageSortingTime = (summarySortingTime / numberOfLists) / mega;
 
             arrayFunction.getPoints().add(new Point(arrSize, averageSortingTime));
 

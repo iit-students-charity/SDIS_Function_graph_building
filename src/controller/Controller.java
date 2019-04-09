@@ -32,7 +32,7 @@ public class Controller {private Function arrayFunction;
         if (!isTCalcThreadsAlive) {
             arrayFunction.getPoints().clear();
             linearFunction.getPoints().clear();
-            graphicCanvas.eraseCanvas();
+            graphicCanvas.erase();
 
             arrayFunCalcThread = new Thread(new SortingTask(arrayFunction, numberOfLists));
             linFunCalcThread = new Thread(new LinearFunctionCalcTask(linearFunction));
