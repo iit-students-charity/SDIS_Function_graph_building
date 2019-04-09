@@ -1,6 +1,7 @@
 package controller;
 
 import javafx.collections.ObservableList;
+import layout.GraphicCanvas;
 import model.Function;
 import model.Point;
 import model.Tree;
@@ -10,12 +11,14 @@ public class SortingTask implements Runnable {
     private final Function arrayFunction;
     private final int calcTaskNumber;
     private int numberOfLists;
+    private GraphicCanvas graphicCanvas;
 
 
-    public SortingTask(Function arrayFunction, int numberOfLists, int calcTaskNumber) {
+    public SortingTask(Function arrayFunction, int numberOfLists, int calcTaskNumber, GraphicCanvas graphicCanvas) {
         this.arrayFunction = arrayFunction;
         this.calcTaskNumber = calcTaskNumber;
         this.numberOfLists = numberOfLists;
+        this.graphicCanvas = graphicCanvas;
     }
 
 
@@ -37,6 +40,7 @@ public class SortingTask implements Runnable {
             averageSortingTime = (summarySortingTime / numberOfLists) / mega;
 
             arrayFunction.getPoints().add(new Point(arrSize, averageSortingTime));
+            graphicCanvas.updateFunctionIterator(arrayFunction);
 
             try {
                 Thread.sleep(sleepTime);

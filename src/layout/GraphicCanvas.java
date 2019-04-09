@@ -83,7 +83,7 @@ public class GraphicCanvas {
         for (int funIter = 0; funIter < functions.size(); funIter++) {
             prevPoints.add(null);
             colors.add(Color.color(forColors.nextDouble(), forColors.nextDouble(), forColors.nextDouble()));
-            functionPointsIterators.add(0);
+            functionPointsIterators.add(-1);
         }
 
         lock = new ReentrantLock();
@@ -174,44 +174,7 @@ public class GraphicCanvas {
             }
         }
 
-        double functionLineWidth = 1;
-        double halfCanvasSize = canvasSize / 2;
-        graphic.setLineWidth(functionLineWidth);
-
-
-        for (int funIter = 0; funIter < functions.size(); funIter++) {
-            if (functionPointsIterators.get(funIter) < functions.get(funIter).getPoints().size()) {
-                graphic.setStroke(colors.get(funIter));
-
-                nextPoint = new Point(
-                        functions.get(funIter).getPoints()
-                                .get(functionPointsIterators
-                                .get(funIter)).getX() * newScale + halfCanvasSize,
-                        -functions.get(funIter).getPoints()
-                                .get(functionPointsIterators.get(funIter))
-                                .getY() * newScale + halfCanvasSize
-                );
-
-                if (prevPoints.get(funIter) == null) {
-                    prevPoints.set(funIter, nextPoint);
-                }
-
-                graphic.strokeLine(
-                        prevPoints.get(funIter).getX(), prevPoints.get(funIter).getY(),
-                        nextPoint.getX(), nextPoint.getY()
-                );
-
-                prevPoints.set(funIter, nextPoint);
-                functionPointsIterators.set(funIter, functionPointsIterators.get(funIter) + 1);
-
-                if (nextPoint.getX() > maxX) {
-                    maxX = nextPoint.getX();
-                }
-                if (nextPoint.getY() < minY) {
-                    minY = nextPoint.getY();
-                }
-            }
-        }
+        drawFunctionGraphics();
     }
 
     private void updateCoordinateAxes() {
@@ -311,7 +274,7 @@ public class GraphicCanvas {
 
         for (int funIter = 0; funIter < prevPoints.size(); funIter++) {
             prevPoints.set(funIter, null);
-            functionPointsIterators.set(funIter, 0);
+            functionPointsIterators.set(funIter, -1);
         }
 
         maxX = Function.MIN_X_DOWN_LIMIT;
@@ -325,6 +288,48 @@ public class GraphicCanvas {
         lock.unlock();
     }
 
+    private void drawFunctionGraphics() {
+        double functionLineWidth = 1;
+        double halfCanvasSize = canvasSize / 2;
+        graphic.setLineWidth(functionLineWidth);
+
+        for (int funIter = 0; funIter < functions.size(); funIter++) {
+            if ((functions.get(funIter).getPoints().size() == 0)
+                    || (functionPointsIterators.get(funIter) == -1)
+                    || ((functions.get(funIter).getPoints().size() - 1) == functionPointsIterators.get(funIter))) {
+                continue;
+            }
+
+            nextPoint = new Point(
+                    functions.get(funIter).getPoints()
+                            .get(functionPointsIterators
+                                    .get(funIter)).getX() * newScale + halfCanvasSize,
+                    -functions.get(funIter).getPoints()
+                            .get(functionPointsIterators.get(funIter))
+                            .getY() * newScale + halfCanvasSize
+            );
+
+            if (prevPoints.get(funIter) == null) {
+                prevPoints.set(funIter, nextPoint);
+            }
+
+            graphic.setStroke(colors.get(funIter));
+            graphic.strokeLine(
+                    prevPoints.get(funIter).getX(), prevPoints.get(funIter).getY(),
+                    nextPoint.getX(), nextPoint.getY()
+            );
+
+            prevPoints.set(funIter, nextPoint);
+
+            if (nextPoint.getX() > maxX) {
+                maxX = nextPoint.getX();
+            }
+            if (nextPoint.getY() < minY) {
+                minY = nextPoint.getY();
+            }
+        }
+    }
+
     private void eraseFunctionGraphics() {
         canvasSize = START_CANVAS_SIZE * newScale;
         updateCanvasConfig();
@@ -332,6 +337,12 @@ public class GraphicCanvas {
         redrawFunctionGraphics();
     }
 
+    public void updateFunctionIterator(Function function) {
+        functionPointsIterators.set(
+                functions.indexOf(function),
+                functionPointsIterators.get(functions.indexOf(function)) + 1
+        );
+    }
 
     public double getSingleScaleSegment() {
         return singleScaleSegment;
