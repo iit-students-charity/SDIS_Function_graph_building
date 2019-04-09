@@ -25,10 +25,10 @@ public class GraphicCanvas {
     private static final double START_CANVAS_SIZE = 600;
     private static final double MARK_SPACING = 20;
 
-    private static final double MAX_CANVAS_SIZE = 5000;
+    private static final double MAX_CANVAS_SIZE = 4000;
     private static final double X_RESIZING_BORDER = 0.85;
     private static final double Y_RESIZING_BORDER = 0.15;
-    private static final double RESIZING_STEP = 0.1;
+    private static final double RESIZING_STEP = 0.5;
     private static final double SCROLL_PANE_CENTER_POSITION = 0.5;
 
     private double currentScale;
@@ -140,38 +140,35 @@ public class GraphicCanvas {
             hasToRedraw = false;
         }
 
-        if (((newScale > currentScale) && (canvasSize < MAX_CANVAS_SIZE)) || (newScale < currentScale)) {
+        if (newScale != currentScale) {
             lock.lock();
-            try {
-                canvasSize *= newScale / currentScale;
+
+            canvasSize *= newScale / currentScale;
+            updateCanvasConfig();
+            redraw();
+
+            currentScale = newScale;
+
+            scrollPane.setVvalue(SCROLL_PANE_CENTER_POSITION);
+            scrollPane.setHvalue(SCROLL_PANE_CENTER_POSITION);
+
+            lock.unlock();
+        }
+
+        if ((maxX >= X_RESIZING_BORDER * canvasSize) || (minY <= Y_RESIZING_BORDER * canvasSize)) {
+            lock.lock();
+
+            if (canvasSize < MAX_CANVAS_SIZE) { // to avoid bufferOverflowException
+                canvasSize += RESIZING_STEP * canvasSize * newScale;
+
                 updateCanvasConfig();
                 redraw();
 
                 scrollPane.setVvalue(SCROLL_PANE_CENTER_POSITION);
                 scrollPane.setHvalue(SCROLL_PANE_CENTER_POSITION);
-
-                currentScale = newScale;
-                singleScaleSegment = MARK_SPACING / newScale;
-            } finally {
-                lock.unlock();
             }
-        }
 
-        if ((maxX >= X_RESIZING_BORDER * canvasSize) || (minY <= Y_RESIZING_BORDER * canvasSize)) {
-            lock.lock();
-            try {
-                if (canvasSize < MAX_CANVAS_SIZE) { // to avoid bufferOverflowException
-                    canvasSize += RESIZING_STEP * canvasSize * newScale;
-
-                    updateCanvasConfig();
-                    redraw();
-
-                    scrollPane.setVvalue(SCROLL_PANE_CENTER_POSITION);
-                    scrollPane.setHvalue(SCROLL_PANE_CENTER_POSITION);
-                }
-            } finally {
-                lock.unlock();
-            }
+            lock.unlock();
         }
 
         drawFunctionGraphics();
@@ -248,10 +245,16 @@ public class GraphicCanvas {
     }
 
     public void incrementScale() {
+        if (canvasSize > MAX_CANVAS_SIZE) {
+            return;
+        }
+
         if (newScale < MAX_SCALE) {
             newScale = new BigDecimal(newScale + SCALING_STEP)
                     .setScale(SCALING_ROUNDING, RoundingMode.HALF_UP).doubleValue();
         }
+
+        singleScaleSegment = MARK_SPACING / newScale;
     }
 
     public void decrementScale() {
@@ -259,6 +262,8 @@ public class GraphicCanvas {
             newScale = new BigDecimal(newScale - SCALING_STEP)
                     .setScale(SCALING_ROUNDING, RoundingMode.HALF_UP).doubleValue();
         }
+
+        singleScaleSegment = MARK_SPACING / newScale;
     }
 
     public void redraw() {
@@ -272,11 +277,6 @@ public class GraphicCanvas {
     private void redrawFunctionGraphics() {
         lock.lock();
 
-        for (int funIter = 0; funIter < prevPoints.size(); funIter++) {
-            prevPoints.set(funIter, null);
-            functionPointsIterators.set(funIter, -1);
-        }
-
         maxX = Function.MIN_X_DOWN_LIMIT;
         minY = Function.MAX_X_UP_LIMIT;
 
@@ -284,6 +284,37 @@ public class GraphicCanvas {
         graphic.setFill(Color.WHITE);
         graphic.fillRect(0,0, canvas.getWidth(), canvas.getHeight());
         updateCoordinateAxes();
+
+        double functionLineWidth = 1;
+        double halfCanvasSize = canvasSize / 2;
+        graphic.setLineWidth(functionLineWidth);
+
+        for (int funIter = 0; funIter < prevPoints.size(); funIter++) {
+            prevPoints.set(funIter, null);
+        }
+
+        for (int funIter = 0; funIter < functions.size(); funIter++) {
+            for (int pointsIter = 0; pointsIter <= functionPointsIterators.get(funIter); pointsIter++) {
+                nextPoint = new Point(
+                        functions.get(funIter).getPoints()
+                                .get(pointsIter).getX() * newScale + halfCanvasSize,
+                        -functions.get(funIter).getPoints()
+                                .get(pointsIter).getY() * newScale + halfCanvasSize
+                );
+
+                if (prevPoints.get(funIter) == null) {
+                    prevPoints.set(funIter, nextPoint);
+                }
+
+                graphic.setStroke(colors.get(funIter));
+                graphic.strokeLine(
+                        prevPoints.get(funIter).getX(), prevPoints.get(funIter).getY(),
+                        nextPoint.getX(), nextPoint.getY()
+                );
+
+                prevPoints.set(funIter, nextPoint);
+            }
+        }
 
         lock.unlock();
     }
@@ -296,7 +327,7 @@ public class GraphicCanvas {
         for (int funIter = 0; funIter < functions.size(); funIter++) {
             if ((functions.get(funIter).getPoints().size() == 0)
                     || (functionPointsIterators.get(funIter) == -1)
-                    || ((functions.get(funIter).getPoints().size() - 1) == functionPointsIterators.get(funIter))) {
+                    || ((functions.get(funIter).getPoints().size() - 1) <= functionPointsIterators.get(funIter))) {
                 continue;
             }
 
@@ -331,17 +362,35 @@ public class GraphicCanvas {
     }
 
     private void eraseFunctionGraphics() {
+        lock.lock();
+
         canvasSize = START_CANVAS_SIZE * newScale;
         updateCanvasConfig();
 
-        redrawFunctionGraphics();
+        for (int funIter = 0; funIter < prevPoints.size(); funIter++) {
+            prevPoints.set(funIter, null);
+            functionPointsIterators.set(funIter, -1);
+        }
+
+        maxX = Function.MIN_X_DOWN_LIMIT;
+        minY = Function.MAX_X_UP_LIMIT;
+
+        graphic.setFill(Color.WHITE);
+        graphic.fillRect(0,0, canvas.getWidth(), canvas.getHeight());
+        updateCoordinateAxes();
+
+        lock.unlock();
     }
 
     public void updateFunctionIterator(Function function) {
+        lock.lock();
+
         functionPointsIterators.set(
                 functions.indexOf(function),
                 functionPointsIterators.get(functions.indexOf(function)) + 1
         );
+
+        lock.unlock();
     }
 
     public double getSingleScaleSegment() {

@@ -19,6 +19,7 @@ import sample.Main;
 
 public class GraphicBuildingComponent {
     private static final String SCALE_TEXT = "Scale: ";
+    private static final String SINGLE_SEGMENT_TEXT = "Single seg.: ";
     private static final int FULL_PERCENTS = 100;
 
     private GridPane gridPane;
@@ -40,7 +41,7 @@ public class GraphicBuildingComponent {
 
 
     public GraphicBuildingComponent(Function arrayFunction, GraphicCanvas graphicCanvas, Controller controller) {
-        singleScaleSegment = new Label("Single seg.: " + (int) graphicCanvas.getSingleScaleSegment());
+        singleScaleSegment = new Label(SINGLE_SEGMENT_TEXT + (int) graphicCanvas.getSingleScaleSegment());
         nTextField = new TextField();
         kTextField = new TextField();
         startBuildButton = new Button("Start");
@@ -57,7 +58,7 @@ public class GraphicBuildingComponent {
         initIncGraphicScaleButtonConfig();
         decGraphicScaleButton = new Button("-");
         initDecGraphicScaleButtonConfig();
-        currentGraphicScaleLabel = new Label(SCALE_TEXT + (int) (graphicCanvas.getNewScale() * FULL_PERCENTS)  + "%");
+        currentGraphicScaleLabel = new Label(SCALE_TEXT + (int) (graphicCanvas.getCurrentScale() * FULL_PERCENTS)  + "%");
 
         gridPane = new GridPane();
         initGridPaneConfig();
@@ -191,16 +192,16 @@ public class GraphicBuildingComponent {
     private void initIncGraphicScaleButtonConfig() {
         incGraphicScaleButton.setOnAction(e -> {
             controller.incrementGraphicScale();
-            currentGraphicScaleLabel.setText(SCALE_TEXT + (int) (graphicCanvas.getCurrentScale() * FULL_PERCENTS) + "%");
-            singleScaleSegment.setText("Single seg.: " + (int) graphicCanvas.getSingleScaleSegment());
+            currentGraphicScaleLabel.setText(SCALE_TEXT + (int) (graphicCanvas.getNewScale() * FULL_PERCENTS) + "%");
+            singleScaleSegment.setText(SINGLE_SEGMENT_TEXT + (int) graphicCanvas.getSingleScaleSegment());
         });
     }
 
     private void initDecGraphicScaleButtonConfig() {
         decGraphicScaleButton.setOnAction(e -> {
             controller.decrementGraphicScale();
-            currentGraphicScaleLabel.setText(SCALE_TEXT + (int) (graphicCanvas.getCurrentScale() * FULL_PERCENTS) + "%");
-            singleScaleSegment.setText("Single seg.: " + (int) graphicCanvas.getSingleScaleSegment());
+            currentGraphicScaleLabel.setText(SCALE_TEXT + (int) (graphicCanvas.getNewScale() * FULL_PERCENTS) + "%");
+            singleScaleSegment.setText(SINGLE_SEGMENT_TEXT + (int) graphicCanvas.getSingleScaleSegment());
         });
     }
 
@@ -209,13 +210,13 @@ public class GraphicBuildingComponent {
             if (e.isControlDown()) {
                 if (e.getDeltaY() > 0) {
                     graphicCanvas.incrementScale();
-                    currentGraphicScaleLabel.setText(SCALE_TEXT + (int) (graphicCanvas.getCurrentScale() * FULL_PERCENTS) + "%");
-                    singleScaleSegment.setText("Single seg.: " + (int) graphicCanvas.getSingleScaleSegment());
+                    currentGraphicScaleLabel.setText(SCALE_TEXT + (int) (graphicCanvas.getNewScale() * FULL_PERCENTS) + "%");
+                    singleScaleSegment.setText(SINGLE_SEGMENT_TEXT + (int) graphicCanvas.getSingleScaleSegment());
                 }
                 if (e.getDeltaY() < 0) {
                     graphicCanvas.decrementScale();
-                    currentGraphicScaleLabel.setText(SCALE_TEXT + (int) (graphicCanvas.getCurrentScale() * FULL_PERCENTS) + "%");
-                    singleScaleSegment.setText("Single seg.: " + (int) graphicCanvas.getSingleScaleSegment());
+                    currentGraphicScaleLabel.setText(SCALE_TEXT + (int) (graphicCanvas.getNewScale() * FULL_PERCENTS) + "%");
+                    singleScaleSegment.setText(SINGLE_SEGMENT_TEXT + (int) graphicCanvas.getSingleScaleSegment());
                 }
             }
         });
