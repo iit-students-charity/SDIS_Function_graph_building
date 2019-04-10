@@ -49,10 +49,10 @@ public class GraphicCanvas {
 
     private ObservableList<Function> functions;
     private ObservableList<Point> prevPoints;
-    private ObservableList<Color> colors;
+    private ObservableList<Color> functionDrawingColors;
     private ObservableList<Integer> functionPointsIterators;
 
-    private Lock lock;
+    private Lock drawingLock;
 
 
     public GraphicCanvas(ObservableList<Function> functions) {
@@ -75,18 +75,18 @@ public class GraphicCanvas {
 
         this.functions = functions;
         prevPoints = FXCollections.observableArrayList();
-        colors = FXCollections.observableArrayList();
+        functionDrawingColors = FXCollections.observableArrayList();
         functionPointsIterators = FXCollections.observableArrayList();
         Random forColors = new Random(System.currentTimeMillis());
 
 
         for (int funIter = 0; funIter < functions.size(); funIter++) {
             prevPoints.add(null);
-            colors.add(Color.color(forColors.nextDouble(), forColors.nextDouble(), forColors.nextDouble()));
+            functionDrawingColors.add(Color.color(forColors.nextDouble(), forColors.nextDouble(), forColors.nextDouble()));
             functionPointsIterators.add(-1);
         }
 
-        lock = new ReentrantLock();
+        drawingLock = new ReentrantLock();
     }
 
     public ScrollPane getScrollPane() {
@@ -105,8 +105,8 @@ public class GraphicCanvas {
         return currentScale;
     }
 
-    public ObservableList<Color> getColors() {
-        return colors;
+    public ObservableList<Color> getFunctionDrawingColors() {
+        return functionDrawingColors;
     }
 
     public ObservableList<Function> getFunctions() {
@@ -141,7 +141,7 @@ public class GraphicCanvas {
         }
 
         if (newScale != currentScale) {
-            lock.lock();
+            drawingLock.lock();
 
             canvasSize *= newScale / currentScale;
             updateCanvasConfig();
@@ -152,11 +152,11 @@ public class GraphicCanvas {
             scrollPane.setVvalue(SCROLL_PANE_CENTER_POSITION);
             scrollPane.setHvalue(SCROLL_PANE_CENTER_POSITION);
 
-            lock.unlock();
+            drawingLock.unlock();
         }
 
         if ((maxX >= X_RESIZING_BORDER * canvasSize) || (minY <= Y_RESIZING_BORDER * canvasSize)) {
-            lock.lock();
+            drawingLock.lock();
 
             if (canvasSize < MAX_CANVAS_SIZE) { // to avoid bufferOverflowException
                 canvasSize += RESIZING_STEP * canvasSize * newScale;
@@ -168,7 +168,7 @@ public class GraphicCanvas {
                 scrollPane.setHvalue(SCROLL_PANE_CENTER_POSITION);
             }
 
-            lock.unlock();
+            drawingLock.unlock();
         }
 
         drawFunctionGraphics();
@@ -266,7 +266,7 @@ public class GraphicCanvas {
         singleScaleSegment = MARK_SPACING / newScale;
     }
 
-    public void redraw() {
+    private void redraw() {
         hasToRedraw = true;
     }
 
@@ -275,7 +275,7 @@ public class GraphicCanvas {
     }
 
     private void redrawFunctionGraphics() {
-        lock.lock();
+        drawingLock.lock();
 
         maxX = Function.MIN_X_DOWN_LIMIT;
         minY = Function.MAX_X_UP_LIMIT;
@@ -306,7 +306,7 @@ public class GraphicCanvas {
                     prevPoints.set(funIter, nextPoint);
                 }
 
-                graphic.setStroke(colors.get(funIter));
+                graphic.setStroke(functionDrawingColors.get(funIter));
                 graphic.strokeLine(
                         prevPoints.get(funIter).getX(), prevPoints.get(funIter).getY(),
                         nextPoint.getX(), nextPoint.getY()
@@ -316,7 +316,7 @@ public class GraphicCanvas {
             }
         }
 
-        lock.unlock();
+        drawingLock.unlock();
     }
 
     private void drawFunctionGraphics() {
@@ -344,7 +344,7 @@ public class GraphicCanvas {
                 prevPoints.set(funIter, nextPoint);
             }
 
-            graphic.setStroke(colors.get(funIter));
+            graphic.setStroke(functionDrawingColors.get(funIter));
             graphic.strokeLine(
                     prevPoints.get(funIter).getX(), prevPoints.get(funIter).getY(),
                     nextPoint.getX(), nextPoint.getY()
@@ -362,7 +362,7 @@ public class GraphicCanvas {
     }
 
     private void eraseFunctionGraphics() {
-        lock.lock();
+        drawingLock.lock();
 
         canvasSize = START_CANVAS_SIZE * newScale;
         updateCanvasConfig();
@@ -379,18 +379,18 @@ public class GraphicCanvas {
         graphic.fillRect(0,0, canvas.getWidth(), canvas.getHeight());
         updateCoordinateAxes();
 
-        lock.unlock();
+        drawingLock.unlock();
     }
 
     public void updateFunctionIterator(Function function) {
-        lock.lock();
+        drawingLock.lock();
 
         functionPointsIterators.set(
                 functions.indexOf(function),
                 functionPointsIterators.get(functions.indexOf(function)) + 1
         );
 
-        lock.unlock();
+        drawingLock.unlock();
     }
 
     public double getSingleScaleSegment() {

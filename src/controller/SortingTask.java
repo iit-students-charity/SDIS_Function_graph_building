@@ -1,10 +1,13 @@
 package controller;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import layout.GraphicCanvas;
 import model.Function;
 import model.Point;
 import model.Tree;
+
+import java.util.Random;
 
 
 public class SortingTask implements Runnable {
@@ -29,15 +32,26 @@ public class SortingTask implements Runnable {
 
         double averageSortingTime;
         double summarySortingTime;
+        double sortingTime;
         double upLimit = arrayFunction.getXUpLimit();
+        double maxSortingTime;
 
+        // Counting sorting time without the biggest one
         for (int arrSize = (int) arrayFunction.getXDownLimit(); arrSize <= upLimit; arrSize++) {
             summarySortingTime = 0;
+            maxSortingTime = 0;
 
             for (int numbOfArrayToCheck = 0; numbOfArrayToCheck < numberOfLists; numbOfArrayToCheck++) {
-                summarySortingTime += sort(ListGenerator.generate(arrSize));
+                sortingTime = sort(ListGenerator.generate(arrSize));
+
+                if (sortingTime > maxSortingTime) {
+                    maxSortingTime = sortingTime;
+                }
+
+                summarySortingTime += sortingTime;
             }
-            averageSortingTime = (summarySortingTime / numberOfLists) / mega;
+            summarySortingTime -= maxSortingTime;
+            averageSortingTime = (summarySortingTime / (numberOfLists - 1)) / mega;
 
             arrayFunction.getPoints().add(new Point(arrSize, averageSortingTime));
             graphicCanvas.updateFunctionIterator(arrayFunction);
@@ -53,6 +67,7 @@ public class SortingTask implements Runnable {
         Thread.currentThread().interrupt();
     }
 
+    // Sorting list with binary tree; returns time passed with sort
     private double sort(ObservableList<Double> doubles) {
         double startSortingTime = System.nanoTime();
         Tree tree = new Tree(doubles.get(0));

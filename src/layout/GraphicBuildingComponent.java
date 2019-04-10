@@ -102,7 +102,7 @@ public class GraphicBuildingComponent {
 
         for (int funIter = 0; funIter < graphicCanvas.getFunctions().size(); funIter++) {
             funDefBox.getChildren().addAll(
-                    createFunctionHintLine(graphicCanvas.getColors().get(funIter)),
+                    createFunctionHintLine(graphicCanvas.getFunctionDrawingColors().get(funIter)),
                     new Label(graphicCanvas.getFunctions().get(funIter).getDefinition())
             );
         }
